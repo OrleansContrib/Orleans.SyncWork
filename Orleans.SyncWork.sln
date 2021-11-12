@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31903.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E908BC7F-91AC-4D75-A06A-97E05E765C17}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{20B3ED9E-B5FB-47A8-B24E-9EED821AEBE3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orleans.SyncWork.Demo.Api", "samples\Orleans.SyncWork.Demo.Api\Orleans.SyncWork.Demo.Api.csproj", "{2655BC3D-7104-41C1-B19B-22E8DAA8F032}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2655BC3D-7104-41C1-B19B-22E8DAA8F032}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2655BC3D-7104-41C1-B19B-22E8DAA8F032}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2655BC3D-7104-41C1-B19B-22E8DAA8F032}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2655BC3D-7104-41C1-B19B-22E8DAA8F032}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2655BC3D-7104-41C1-B19B-22E8DAA8F032} = {20B3ED9E-B5FB-47A8-B24E-9EED821AEBE3}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {17BB45B7-AC08-488D-905F-11E706140C72}
+	EndGlobalSection
+EndGlobal
