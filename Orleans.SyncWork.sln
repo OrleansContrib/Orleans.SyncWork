@@ -9,6 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{20B3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orleans.SyncWork.Demo.Api", "samples\Orleans.SyncWork.Demo.Api\Orleans.SyncWork.Demo.Api.csproj", "{2655BC3D-7104-41C1-B19B-22E8DAA8F032}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orleans.SyncWork.Demo.Api.Benchmark", "samples\Orleans.SyncWork.Demo.Api.Benchmark\Orleans.SyncWork.Demo.Api.Benchmark.csproj", "{F3AAFF72-3922-493B-AD5F-BF8B4F7286F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.SyncWork.Server", "src\Orleans.SyncWork.Server\Orleans.SyncWork.Server.csproj", "{F8A4E551-AC7B-4860-9468-DF0E2219E66B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,12 +23,22 @@ Global
 		{2655BC3D-7104-41C1-B19B-22E8DAA8F032}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2655BC3D-7104-41C1-B19B-22E8DAA8F032}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2655BC3D-7104-41C1-B19B-22E8DAA8F032}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3AAFF72-3922-493B-AD5F-BF8B4F7286F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3AAFF72-3922-493B-AD5F-BF8B4F7286F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3AAFF72-3922-493B-AD5F-BF8B4F7286F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3AAFF72-3922-493B-AD5F-BF8B4F7286F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8A4E551-AC7B-4860-9468-DF0E2219E66B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8A4E551-AC7B-4860-9468-DF0E2219E66B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8A4E551-AC7B-4860-9468-DF0E2219E66B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8A4E551-AC7B-4860-9468-DF0E2219E66B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2655BC3D-7104-41C1-B19B-22E8DAA8F032} = {20B3ED9E-B5FB-47A8-B24E-9EED821AEBE3}
+		{F3AAFF72-3922-493B-AD5F-BF8B4F7286F7} = {20B3ED9E-B5FB-47A8-B24E-9EED821AEBE3}
+		{F8A4E551-AC7B-4860-9468-DF0E2219E66B} = {E908BC7F-91AC-4D75-A06A-97E05E765C17}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17BB45B7-AC08-488D-905F-11E706140C72}
