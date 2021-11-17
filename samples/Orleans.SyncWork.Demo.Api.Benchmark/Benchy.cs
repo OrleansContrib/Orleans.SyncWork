@@ -5,8 +5,8 @@ namespace Orleans.SyncWork.Demo.Api.Benchmark;
 
 public class Benchy
 {
-    private readonly IPasswordHasher _passwordHasher = new PasswordHasher();
-    const string _password = "my super neat password that's totally secure because it's super long and i don't think anyone would be able to guess it because it's so long, you know what i mean my dude?";
+    //private readonly IPasswordVerifier _passwordVerifier = new PasswordVerifier();
+    //const string _password = "my super neat password that's totally secure because it's super long and i don't think anyone would be able to guess it because it's so long, you know what i mean my dude?";
     const int totalNumberPerBenchmark = 20;
 
     [Benchmark]
@@ -14,7 +14,7 @@ public class Benchy
     {
         for (var i = 0; i < totalNumberPerBenchmark; i++)
         {
-            _passwordHasher.HashPassword(_password);
+            //_passwordHasher.HashPassword(_password);
         }
     }
 
@@ -24,7 +24,7 @@ public class Benchy
         var tasks = new List<Task>();
         for (var i = 0; i < totalNumberPerBenchmark; i++)
         {
-            tasks.Add(_passwordHasher.HashPassword(_password));
+            //tasks.Add(_passwordHasher.HashPassword(_password));
         }
 
         await Task.WhenAll(tasks);

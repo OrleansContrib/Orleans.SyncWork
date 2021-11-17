@@ -1,3 +1,11 @@
+﻿using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Orleans;
+using Orleans.SyncWork;
+using Orleans.SyncWork.Demo.Api;
+using Orleans.SyncWork.Demo.Api.Services.Grains;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,39 +13,33 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var orleans = await OrleansConfigurationHelper.StartSilo();
+builder.Services.AddSingleton(orleans);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+var grainFactory = orleans.Services.GetRequiredService<IGrainFactory>();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-       new WeatherForecast
-       (
-           DateTime.Now.AddDays(index),
-           Random.Shared.Next(-20, 55),
-           summaries[Random.Shared.Next(summaries.Length)]
-       ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app
+    .MapGet("/helloWorld", async (string name) =>
+    {
+        var helloWorldGrain = grainFactory.GetGrain<IHelloWorld>(Guid.Empty);
+        return await helloWorldGrain.GetGreeting(name);
+    })
+    .WithName("GetHelloWorldGreeting");
+
+app
+    .MapPost("/passwordVerifier", async (PasswordVerifierRequest request) =>
+    {
+        var passwordVerifyGrain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResponse>>(Guid.NewGuid());
+        return await passwordVerifyGrain.StartWorkAndPollUntilResult(request);
+    })
+    .WithName("GetPasswordVerify");
 
 app.Run();
-
-internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
