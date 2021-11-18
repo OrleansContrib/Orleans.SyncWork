@@ -14,8 +14,22 @@ namespace Orleans.SyncWork.Demo.Api
     {
         public static async Task<ISiloHost> StartSilo()
         {
-            // define the cluster configuration
-            var builder = new SiloHostBuilder()
+            var builder = new SiloHostBuilder();
+            ConfigureSiloHostBuilder(builder);
+
+            var host = builder.Build();
+            await host.StartAsync();
+            return host;
+        }
+
+        /// <summary>
+        /// Configures the silo host builder
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static ISiloHostBuilder ConfigureSiloHostBuilder(ISiloHostBuilder builder)
+        {
+            builder
                 .UseLocalhostClustering()
                 .Configure<ClusterOptions>(options =>
                 {
@@ -33,10 +47,7 @@ namespace Orleans.SyncWork.Demo.Api
                 services.AddSingleton<IPasswordVerifier, Services.PasswordVerifier>();
                 services.AddSingleton<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResponse>, Services.Grains.PasswordVerifier>();
             });
-
-            var host = builder.Build();
-            await host.StartAsync();
-            return host;
+            return builder;
         }
     }
 }

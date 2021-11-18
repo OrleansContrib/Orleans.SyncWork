@@ -5,16 +5,20 @@ namespace Orleans.SyncWork.Demo.Api.Benchmark;
 
 public class Benchy
 {
-    //private readonly IPasswordVerifier _passwordVerifier = new PasswordVerifier();
-    //const string _password = "my super neat password that's totally secure because it's super long and i don't think anyone would be able to guess it because it's so long, you know what i mean my dude?";
-    const int totalNumberPerBenchmark = 20;
+    const int TotalNumberPerBenchmark = 50;
+    private readonly IPasswordVerifier _passwordVerifier = new PasswordVerifier();
+
+    public Benchy()
+    {
+        Console.WriteLine("Doots");
+    }
 
     [Benchmark]
     public void Serial()
     {
-        for (var i = 0; i < totalNumberPerBenchmark; i++)
+        for (var i = 0; i < TotalNumberPerBenchmark; i++)
         {
-            //_passwordHasher.HashPassword(_password);
+            _passwordVerifier.VerifyPassword(IPasswordVerifier.PasswordHash, IPasswordVerifier.Password);
         }
     }
 
@@ -22,9 +26,9 @@ public class Benchy
     public async Task MultipleTasks()
     {
         var tasks = new List<Task>();
-        for (var i = 0; i < totalNumberPerBenchmark; i++)
+        for (var i = 0; i < TotalNumberPerBenchmark; i++)
         {
-            //tasks.Add(_passwordHasher.HashPassword(_password));
+            tasks.Add(_passwordVerifier.VerifyPassword(IPasswordVerifier.PasswordHash, IPasswordVerifier.Password));
         }
 
         await Task.WhenAll(tasks);
