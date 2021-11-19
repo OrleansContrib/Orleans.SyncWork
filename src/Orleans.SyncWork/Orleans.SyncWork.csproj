@@ -2,6 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <Authors>Kritner</Authors>
+    <Company>Kritner</Company>
+    <Description>Provides an abstract base class grain to use for dispatching potentially long running, CPU bound work to an Orleans cluster.</Description>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageIcon>OrleansLogo.png</PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>orleans</PackageTags>
+
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <FileVersion>$(OrleansSyncWorkVersion)</FileVersion>
+    <Version>$(OrleansSyncWorkVersion)</Version>
+    <AssemblyVersion>$(OrleansSyncWorkVersion)</AssemblyVersion>
+    
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +28,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="OrleansLogo.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
