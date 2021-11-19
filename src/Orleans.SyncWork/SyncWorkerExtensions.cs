@@ -18,6 +18,7 @@ public static class SyncWorkerExtensions
     public static async Task<TResult> StartWorkAndPollUntilResult<TRequest, TResult>(this ISyncWorker<TRequest, TResult> worker, TRequest request)
     {
         await worker.Start(request);
+        await Task.Delay(100);
 
         SyncWorkStatus status;
         while (true)
@@ -27,15 +28,17 @@ public static class SyncWorkerExtensions
             switch (status)
             {
                 case SyncWorkStatus.Running:
-                    await Task.Delay(100);
+                    await Task.Delay(1000);
                     break;
                 case SyncWorkStatus.Completed:
                     return await worker.GetResult();
                 case SyncWorkStatus.Faulted:
                     var exception = await worker.GetException();
                     throw exception;
+                case SyncWorkStatus.NotStarted:
+                    throw new Exception("This should happen, but if it does, I'm assuming it means the cluster may have died, or a timeout occurred and the grain got reinstantiated without firing off the work.");
                 default:
-                    throw new Exception("This shouldn't happen I don't think...");
+                    throw new Exception("How did we even get here...?");
             }
         }
     }

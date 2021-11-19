@@ -14,6 +14,8 @@ public class ClusterFixture : IDisposable
         {
             siloBuilder.ConfigureServices(services => {
                 services.AddSingleton<IPasswordVerifier, PasswordVerifier>();
+                var limitedConcurrencyLevelTaskScheduler = new LimitedConcurrencyLevelTaskScheduler(Environment.ProcessorCount - 2);
+                services.AddSingleton(limitedConcurrencyLevelTaskScheduler);
             });
         }
     }

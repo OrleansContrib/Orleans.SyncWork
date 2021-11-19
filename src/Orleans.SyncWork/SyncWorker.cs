@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Orleans.SyncWork.Enums;
@@ -9,14 +10,17 @@ namespace Orleans.SyncWork;
 public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TRequest, TResult>, IGrain
 {
     protected readonly ILogger _logger;
+    private readonly LimitedConcurrencyLevelTaskScheduler _limitedConcurrencyScheduler;
+
     private SyncWorkStatus _status = SyncWorkStatus.NotStarted;
     private TResult _result;
     private Exception _exception;
     private Task _task;
 
-    protected SyncWorker(ILogger logger)
+    protected SyncWorker(ILogger logger, LimitedConcurrencyLevelTaskScheduler limitedConcurrencyScheduler)
     {
         _logger = logger;
+        _limitedConcurrencyScheduler = limitedConcurrencyScheduler;
     }
 
     public Task<bool> Start(TRequest request)
@@ -67,7 +71,7 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
 
     private Task CreateTask(TRequest request)
     {
-        return Task.Run(async () =>
+        return Task.Factory.StartNew(async () =>
         {
             try
             {
@@ -84,6 +88,6 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
                 _exception = e;
                 _status = SyncWorkStatus.Faulted;
             }
-        });
+        }, CancellationToken.None, TaskCreationOptions.LongRunning, _limitedConcurrencyScheduler);
     }
 }

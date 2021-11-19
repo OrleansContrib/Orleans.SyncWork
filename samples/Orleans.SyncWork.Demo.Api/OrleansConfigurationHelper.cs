@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -38,8 +39,12 @@ namespace Orleans.SyncWork.Demo.Api
                 })
                 .Configure<EndpointOptions>(options => options.AdvertisedIPAddress = IPAddress.Loopback)
                 .ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IHelloWorld).Assembly).WithReferences())
-                .ConfigureSyncWorkAbstraction()
-                .ConfigureLogging(logging => logging.AddConsole());
+                .ConfigureSyncWorkAbstraction(Environment.ProcessorCount - 2)
+                .ConfigureLogging(logging => logging.AddConsole())
+                .UseDashboard(config =>
+                {
+                    config.Port = 8081;
+                });
 
             builder.ConfigureServices(services =>
             {

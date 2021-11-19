@@ -7,7 +7,10 @@ public class PasswordVerifier : SyncWorker<PasswordVerifierRequest, PasswordVeri
 {
     private readonly IPasswordVerifier _passwordVerifier;
 
-    public PasswordVerifier(ILogger<PasswordVerifier> logger, IPasswordVerifier passwordVerifier) : base(logger)
+    public PasswordVerifier(
+        ILogger<PasswordVerifier> logger, 
+        LimitedConcurrencyLevelTaskScheduler limitedConcurrencyLevelTaskScheduler, 
+        IPasswordVerifier passwordVerifier) : base(logger, limitedConcurrencyLevelTaskScheduler)
     {
         _passwordVerifier = passwordVerifier;
     }

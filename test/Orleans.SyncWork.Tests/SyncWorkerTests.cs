@@ -18,8 +18,7 @@ public class SyncWorkerTests : ClusterTestBase
     [InlineData(10)]
     [InlineData(20)]
     [InlineData(1000)]
-    [InlineData(10000)]
-    public async Task WhenGivenLargeNumberOfRequests_SystemShouldNotBecomeOverloaded(int totalInvokes)
+    public async Task WhenGivenNumberOfRequests_SystemShouldNotBecomeOverloaded(int totalInvokes)
     {
         var tasks = new List<Task<PasswordVerifierResponse>>();
         var request = new PasswordVerifierRequest
@@ -28,6 +27,33 @@ public class SyncWorkerTests : ClusterTestBase
             PasswordHash = IPasswordVerifier.PasswordHash
         };
         for (var i = 0; i < totalInvokes; i++)
+        {
+            var grain = _cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResponse>>(Guid.NewGuid());
+            tasks.Add(grain.StartWorkAndPollUntilResult(request));
+        }
+
+        await Task.WhenAll(tasks);
+
+        tasks.Select(task => task.Result).Should().OnlyContain(result => true);
+    }
+
+    /// <summary>
+    /// This should be more than enough grains to overload the server.  
+    /// Should be a "pretty decent" test to show that the <see cref="LimitedConcurrencyLevelTaskScheduler"/> is doing
+    /// what is intended, by not allowing "more work than the CPU can handle", while still leaving enough room for
+    /// Orleans messaging to not get overloaded.
+    /// </summary>
+    /// <returns></returns>
+    [Fact]
+    public async Task WhenGivenLargeNumberOfRequests_SystemShouldNotBecomeOverloaded()
+    {
+        var tasks = new List<Task<PasswordVerifierResponse>>();
+        var request = new PasswordVerifierRequest
+        {
+            Password = IPasswordVerifier.Password,
+            PasswordHash = IPasswordVerifier.PasswordHash
+        };
+        for (var i = 0; i < 10_000; i++)
         {
             var grain = _cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResponse>>(Guid.NewGuid());
             tasks.Add(grain.StartWorkAndPollUntilResult(request));

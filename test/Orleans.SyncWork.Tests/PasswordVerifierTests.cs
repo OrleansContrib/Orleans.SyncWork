@@ -45,7 +45,7 @@ public class PasswordVerifierTests : ClusterTestBase
     }
 
     [Fact]
-    public async Task WhenGivenBadHashFormat_ShouldExpection()
+    public async Task WhenGivenBadHashFormat_ShouldException()
     {
         var grain = _cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResponse>>(Guid.NewGuid());
 

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Orleans;
@@ -41,5 +44,29 @@ app
         return await passwordVerifyGrain.StartWorkAndPollUntilResult(request);
     })
     .WithName("GetPasswordVerify");
+
+app
+    .MapPost("/passwordVerifierBunchoRequests", async (PasswordVerifierRequest request) =>
+    {
+        var tasks = new List<Task<PasswordVerifierResponse>>();
+
+        for (var i = 0; i < 10_000; i++)
+        {
+            var passwordVerifyGrain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResponse>>(Guid.NewGuid());
+            tasks.Add(passwordVerifyGrain.StartWorkAndPollUntilResult(request));
+        }
+        
+        await Task.WhenAll(tasks);
+
+        var allGood = tasks
+        .Select(task => task.Result)
+        .All(result => result.IsValid);
+
+        return new PasswordVerifierResponse()
+        {
+            IsValid = allGood
+        };
+    })
+    .WithName("GetPasswordVerifyBunchoRequests");
 
 app.Run();
