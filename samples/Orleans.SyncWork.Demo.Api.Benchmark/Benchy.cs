@@ -1,17 +1,22 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using BenchmarkDotNet.Attributes;
+using Microsoft.Extensions.DependencyInjection;
 using Orleans.SyncWork.Demo.Api.Services;
+using Orleans.SyncWork.Demo.Api.Services.Grains;
 
 namespace Orleans.SyncWork.Demo.Api.Benchmark;
 
 public class Benchy
 {
-    const int TotalNumberPerBenchmark = 50;
-    private readonly IPasswordVerifier _passwordVerifier = new PasswordVerifier();
-
-    public Benchy()
+    const int TotalNumberPerBenchmark = 100;
+    private readonly IPasswordVerifier _passwordVerifier = new Services.PasswordVerifier();
+    private readonly PasswordVerifierRequest _request = new PasswordVerifierRequest()
     {
-        Console.WriteLine("Doots");
-    }
+        Password = IPasswordVerifier.Password,
+        PasswordHash = IPasswordVerifier.PasswordHash
+    };
 
     [Benchmark]
     public void Serial()
@@ -29,6 +34,35 @@ public class Benchy
         for (var i = 0; i < TotalNumberPerBenchmark; i++)
         {
             tasks.Add(_passwordVerifier.VerifyPassword(IPasswordVerifier.PasswordHash, IPasswordVerifier.Password));
+        }
+
+        await Task.WhenAll(tasks);
+    }
+
+    [Benchmark]
+    public async Task MultipleParallelTasks()
+    {
+        var tasks = new List<Task>();
+
+        Parallel.For(0, TotalNumberPerBenchmark, i =>
+        {
+            tasks.Add(_passwordVerifier.VerifyPassword(IPasswordVerifier.PasswordHash, IPasswordVerifier.Password));
+        });
+
+        await Task.WhenAll(tasks);
+    }
+
+    [Benchmark]
+    public async Task OrleansTasks()
+    {
+        var siloHost = await BenchmarkingSIloHost.GetSiloHost();
+        var grainFactory = siloHost.Services.GetRequiredService<IGrainFactory>();
+        var grain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResponse>>(Guid.NewGuid());
+
+        var tasks = new List<Task>();
+        for (var i = 0; i < TotalNumberPerBenchmark; i++)
+        {
+            tasks.Add(grain.StartWorkAndPollUntilResult(_request));
         }
 
         await Task.WhenAll(tasks);
