@@ -1,6 +1,4 @@
-# Orleans.SyncWork
-
-This package's intention is to expose an abstract base class to allow [Orleans](https://github.com/dotnet/orleans/) to work with long running CPU bound synchronous work, without becoming overloaded.
+This package's intention is to expose an abstract base class to allow [Orleans](https://github.com/dotnet/orleans/) to work with long running, CPU bound, synchronous work, without becoming overloaded.
 
 ## Project Overview
 
@@ -15,7 +13,7 @@ The projects in this repository include:
 
 ### Orleans.SyncWork
 
-The meat and potatoes of the project.  This project contains the abstraction of "Long Running CPU bound Synchronous work" in the form of an abstract base class [SyncWorker](https://github.com/Kritner/Orleans.SyncWork/blob/main/src/Orleans.SyncWork/SyncWorker.cs); which implements an interface [ISyncWorker](https://github.com/Kritner/Orleans.SyncWork/blob/main/src/Orleans.SyncWork/ISyncWorker.cs).
+The meat and potatoes of the project.  This project contains the abstraction of "Long Running, CPU bound, Synchronous work" in the form of an abstract base class [SyncWorker](https://github.com/Kritner/Orleans.SyncWork/blob/main/src/Orleans.SyncWork/SyncWorker.cs); which implements an interface [ISyncWorker](https://github.com/Kritner/Orleans.SyncWork/blob/main/src/Orleans.SyncWork/ISyncWorker.cs).
 
 When long running work is identified, you can extend the base class `SyncWorker`, providing a `TRequest` and `TResponse` unique to the long running work.  This allows you to create as many `ISyncWork<TRequest, TResponse>` implementations as necessary, for all your long running CPU bound needs! (At least that is the hope.)
 
@@ -27,7 +25,7 @@ Basic "flow" of the SyncWork:
 
 This package introduces a few "requirements" against Orleans:
 
-* In order to not overload Orleans, a LimitedConcurrencyLevelTaskScheduler is introduced. This task scheduler is registered (either manually or through the provided extension method) with a maximum level of concurrency for the silo being set up.  This maximum concurrency ***MUST*** allow for idle threads, lest the Orleans server be overloaded.  In testing, the general rule of thumb was `Environment.ProcessorCount - 2` max concurrency.  The important part is that the CPU is not fully "tapped out" such that the normal Orleans asynchronous messaging can't make it through due to the blocking sync work - this will make things start timing out.
+* In order to not overload Orleans, a `LimitedConcurrencyLevelTaskScheduler` is introduced. This task scheduler is registered (either manually or through the provided extension method) with a maximum level of concurrency for the silo being set up.  This maximum concurrency ***MUST*** allow for idle threads, lest the Orleans server be overloaded.  In testing, the general rule of thumb was `Environment.ProcessorCount - 2` max concurrency.  The important part is that the CPU is not fully "tapped out" such that the normal Orleans asynchronous messaging can't make it through due to the blocking sync work - this will make things start timing out.
 * Blocking grains are stateful, and are currently keyed on a Guid.  If in a situation where multiple grains of long running work is needed, each grain should be initialized with its own unique identity.
 * Blocking grains *likely* ***CAN NOT*** dispatch further blocking grains.  This is not yet tested under the repository, but it stands to reason that with a limited concurrency scheduler, the following scenario would lead to a deadlock:
     * Grain A is long running
@@ -35,9 +33,9 @@ This package introduces a few "requirements" against Orleans:
     * Grain A initializes and fires off Grain B
     * Grain A cannot complete its work until it gets the results of Grain B
 
-    In the following scenario, if "Grain A" is "actively being worked" and it fires off a "Grain B", but "Grain A" cannot complete its work until "Grain B" finishes is, but "Grain B" cannot *start* its work until "Grain A" finishes its work, you've run into a situation where the limited concurrency task scheduler can never finish the work of "Grain A".
-
-    There may be a way to avoid the above scenario, but I have not yet deeply explored it.
+    In the above scenario, if "Grain A" is "actively being worked" and it fires off a "Grain B", but "Grain A" cannot complete its work until "Grain B" finishes its own, but "Grain B" cannot *start* its work until "Grain A" finishes its work due to limited concurrency, you've run into a situation where the limited concurrency task scheduler can never finish the work of "Grain A".
+    
+    That was quite a sentence, hopefully the point was conveyed somewhat sensibly. There may be a way to avoid the above scenario, but I have not yet deeply explored it.
 
 #### Usage
 
@@ -96,7 +94,7 @@ The above `StartWorkAndPollUntilResult` is an extension method defined in the pa
 
 Unit testing project for the work in [Orleans.SyncWork](#orleanssyncwork).  These tests bring up a "TestCluster" which is used for the full duration of the tests against the grains.
 
-One of the tests in particular throws 10k grains onto the cluster at once, all of which are long running (~200ms each) on my machine - more than enough time to overload the cluster if the limited concurrency task scheduler is not working along side the SyncWork base class correctly.
+One of the tests in particular throws 10k grains onto the cluster at once, all of which are long running (~200ms each) on my machine - more than enough time to overload the cluster if the limited concurrency task scheduler is not working along side the `SyncWork` base class correctly.
 
 TODO: still could use a few more unit tests here to if nothing else, document behavior.
 
