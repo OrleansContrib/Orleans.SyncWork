@@ -11,6 +11,8 @@ public static class SyncWorkerExtensions
 {
     /// <summary>
     /// Starts the work of a <see cref="ISyncWorker{TRequest, TResult}"/>, polls it until a result is available, then returns it.
+    /// 
+    /// Polls the <see cref="ISyncWorker{TRequest, TResult}"/> every 1000ms for a result, until one is available.
     /// </summary>
     /// <typeparam name="TRequest">The type of request being dispatched.</typeparam>
     /// <typeparam name="TResult">The type of result expected from the work.</typeparam>
@@ -18,7 +20,24 @@ public static class SyncWorkerExtensions
     /// <param name="request">The request to be dispatched.</param>
     /// <returns>The result of the <see cref="ISyncWorker{TRequest, TResult}"/>.</returns>
     /// <exception cref="Exception">Thrown when the <see cref="ISyncWorker{TRequest, TResult}"/> is in a <see cref="SyncWorkStatus.Faulted"/> state.</exception>
-    public static async Task<TResult> StartWorkAndPollUntilResult<TRequest, TResult>(this ISyncWorker<TRequest, TResult> worker, TRequest request)
+    public static Task<TResult> StartWorkAndPollUntilResult<TRequest, TResult>(this ISyncWorker<TRequest, TResult> worker, TRequest request)
+    {
+        return worker.StartWorkAndPollUntilResult(request, 1000);
+    }
+
+    /// <summary>
+    /// Starts the work of a <see cref="ISyncWorker{TRequest, TResult}"/>, polls it until a result is available, then returns it.
+    /// </summary>
+    /// <typeparam name="TRequest">The type of request being dispatched.</typeparam>
+    /// <typeparam name="TResult">The type of result expected from the work.</typeparam>
+    /// <param name="worker">The <see cref="ISyncWorker{TRequest, TResult}"/> doing the work.</param>
+    /// <param name="request">The request to be dispatched.</param>
+    /// <param name="msDelayPerStatusPoll">
+    ///     The ms delay per attempt to poll for a <see cref="SyncWorkStatus.Completed"/> or <see cref="SyncWorkStatus.Faulted"/> status.
+    /// </param>
+    /// <returns>The result of the <see cref="ISyncWorker{TRequest, TResult}"/>.</returns>
+    /// <exception cref="Exception">Thrown when the <see cref="ISyncWorker{TRequest, TResult}"/> is in a <see cref="SyncWorkStatus.Faulted"/> state.</exception>
+    public static async Task<TResult> StartWorkAndPollUntilResult<TRequest, TResult>(this ISyncWorker<TRequest, TResult> worker, TRequest request, int msDelayPerStatusPoll)
     {
         await worker.Start(request);
         await Task.Delay(100);
@@ -31,7 +50,7 @@ public static class SyncWorkerExtensions
             switch (status)
             {
                 case SyncWorkStatus.Running:
-                    await Task.Delay(1000);
+                    await Task.Delay(msDelayPerStatusPoll);
                     break;
                 case SyncWorkStatus.Completed:
                     return await worker.GetResult();

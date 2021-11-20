@@ -11,11 +11,12 @@ namespace Orleans.SyncWork.Tests;
 /// <summary>
 /// This test class is not *necessarily* specific the the <see cref="PasswordVerifier"/> grain. It is more
 /// intended to demonstrate the workings of the "flow" of using the <see cref="ISyncWorker{TRequest, TResult}"/>
-/// as far as getting expected results and exceptions from the execution of the grain.
+/// as far as getting expected results and exceptions from the execution of the grain using the extension method(s)
+/// in <see cref="SyncWorkerExtensions"/>.
 /// </summary>
-public class PasswordVerifierTests : ClusterTestBase
+public class SyncWorkerExtensionMethodTests : ClusterTestBase
 {
-    public PasswordVerifierTests(ClusterFixture fixture) : base(fixture) { }
+    public SyncWorkerExtensionMethodTests(ClusterFixture fixture) : base(fixture) { }
 
     [Fact]
     public async Task WhenGivenValidPasswordAndHash_ShouldVerify()
