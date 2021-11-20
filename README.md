@@ -4,7 +4,7 @@ This package's intention is to expose an abstract base class to allow [Orleans](
 
 ## Project Overview
 
-There are several projects within this repository, all with the idea of demonstrating and/or testing the claim that the NuGet package https://www.nuget.org/packages/Orleans.SyncWork/ does what is claimed it does.
+There are several projects within this repository, all with the idea of demonstrating and/or testing the claim that the NuGet package https://www.nuget.org/packages/Orleans.SyncWork/ does what it is claimed it does.
 
 The projects in this repository include:
 
@@ -183,9 +183,9 @@ And here are the results:
 
 |                Method |     Mean |    Error |   StdDev |
 |---------------------- |---------:|---------:|---------:|
-|                Serial | 12.284 s | 0.0145 s | 0.0135 s |
-|         MultipleTasks | 12.274 s | 0.0073 s | 0.0065 s |
-| MultipleParallelTasks |  1.723 s | 0.0185 s | 0.0144 s |
-|          OrleansTasks |  1.118 s | 0.0080 s | 0.0074 s |
+|                Serial | 12.399 s | 0.0087 s | 0.0077 s |
+|         MultipleTasks | 12.289 s | 0.0106 s | 0.0094 s |
+| MultipleParallelTasks |  1.749 s | 0.0347 s | 0.0413 s |
+|          OrleansTasks |  2.130 s | 0.0055 s | 0.0084 s |
 
-And of course note, that in the above the Orleans tasks are *limited* to my local cluster.  In a more real situation where you have multiple nodes to the cluster, you could theoretically expect to get better timing, though you'd probably have to deal more with network latency.
+And of course note, that in the above the Orleans tasks are *limited* to my local cluster.  In a more real situation where you have multiple nodes to the cluster, you could expect to get better timing, though you'd probably have to deal more with network latency.
