@@ -7,6 +7,7 @@ using Orleans.Configuration;
 using Orleans.Hosting;
 using Orleans.SyncWork.Demo.Api.Services;
 using Orleans.SyncWork.Demo.Api.Services.Grains;
+using Orleans.SyncWork.Demo.Api.Services.TestGrains;
 using Orleans.SyncWork.ExtensionMethods;
 
 namespace Orleans.SyncWork.Demo.Api
@@ -65,7 +66,9 @@ namespace Orleans.SyncWork.Demo.Api
             {
                 services.AddSingleton<IHelloWorld, HelloWorld>();
                 services.AddSingleton<IPasswordVerifier, Services.PasswordVerifier>();
-                services.AddSingleton<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResponse>, Services.Grains.PasswordVerifier>();
+                services.AddSingleton<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>, Services.Grains.PasswordVerifier>();
+                services.AddSingleton<ISyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>, GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable>();
+                services.AddSingleton<ISyncWorker<TestDelayExceptionRequest, TestDelayExceptionResult>, GrainThatWaitsSetTimePriorToExceptionResultBecomingAvailable>();
             });
             return builder;
         }

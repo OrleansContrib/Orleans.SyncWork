@@ -40,7 +40,7 @@ app
 app
     .MapPost("/passwordVerifier", async (PasswordVerifierRequest request) =>
     {
-        var passwordVerifyGrain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResponse>>(Guid.NewGuid());
+        var passwordVerifyGrain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
         return await passwordVerifyGrain.StartWorkAndPollUntilResult(request);
     })
     .WithName("GetPasswordVerify");
@@ -48,11 +48,11 @@ app
 app
     .MapPost("/passwordVerifierBunchoRequests", async (PasswordVerifierRequest request) =>
     {
-        var tasks = new List<Task<PasswordVerifierResponse>>();
+        var tasks = new List<Task<PasswordVerifierResult>>();
 
         for (var i = 0; i < 10_000; i++)
         {
-            var passwordVerifyGrain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResponse>>(Guid.NewGuid());
+            var passwordVerifyGrain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
             tasks.Add(passwordVerifyGrain.StartWorkAndPollUntilResult(request));
         }
         
@@ -62,7 +62,7 @@ app
         .Select(task => task.Result)
         .All(result => result.IsValid);
 
-        return new PasswordVerifierResponse()
+        return new PasswordVerifierResult()
         {
             IsValid = allGood
         };

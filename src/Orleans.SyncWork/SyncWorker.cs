@@ -7,6 +7,14 @@ using Orleans.SyncWork.Exceptions;
 
 namespace Orleans.SyncWork;
 
+/// <summary>
+/// This class should be used as the base class for extending for the creation of long running, cpu bound, synchronous work.
+/// 
+/// It relies on a configured <see cref="LimitedConcurrencyLevelTaskScheduler"/> that limits concurrent work to some level
+/// below the CPU being "fully engaged with work", as to leave enough resources for the Orleans async messaging to get through.
+/// </summary>
+/// <typeparam name="TRequest">The request type (arguments/parameters) for a long running piece of work.</typeparam>
+/// <typeparam name="TResult">The result/response for a long running piece of work.</typeparam>
 public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TRequest, TResult>, IGrain
 {
     protected readonly ILogger _logger;
@@ -23,6 +31,7 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
         _limitedConcurrencyScheduler = limitedConcurrencyScheduler;
     }
 
+    /// <inheritdoc />
     public Task<bool> Start(TRequest request)
     {
         if (_task != null)
@@ -38,11 +47,13 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
         return Task.FromResult(true);
     }
 
+    /// <inheritdoc />
     public Task<SyncWorkStatus> GetWorkStatus()
     {
         return Task.FromResult(_status);
     }
 
+    /// <inheritdoc />
     public Task<Exception> GetException()
     {
         if (_status != SyncWorkStatus.Faulted)
@@ -51,9 +62,12 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
             throw new InvalidStateException(_status, SyncWorkStatus.Faulted);
         }
 
+        _task = null;
+
         return Task.FromResult(_exception);
     }
 
+    /// <inheritdoc />
     public Task<TResult> GetResult()
     {
         if (_status != SyncWorkStatus.Completed)
@@ -67,8 +81,18 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
         return Task.FromResult(_result);
     }
 
+    /// <summary>
+    /// The method that actually performs the long running work.
+    /// </summary>
+    /// <param name="request">The request/parameters used for the execution of the method.</param>
+    /// <returns></returns>
     protected abstract Task<TResult> PerformWork(TRequest request);
 
+    /// <summary>
+    /// The task creation that fires off the long running work to the <see cref="LimitedConcurrencyLevelTaskScheduler"/>.
+    /// </summary>
+    /// <param name="request">The request to use for the invoke of the long running work.</param>
+    /// <returns>a <see cref="Task"/> representing the fact that the work has been dispatched.</returns>
     private Task CreateTask(TRequest request)
     {
         return Task.Factory.StartNew(async () =>

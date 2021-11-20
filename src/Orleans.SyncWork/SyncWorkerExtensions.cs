@@ -4,6 +4,9 @@ using Orleans.SyncWork.Enums;
 
 namespace Orleans.SyncWork;
 
+/// <summary>
+/// Extension method(s) for <see cref="ISyncWorker{TRequest, TResult}"/>.
+/// </summary>
 public static class SyncWorkerExtensions
 {
     /// <summary>
