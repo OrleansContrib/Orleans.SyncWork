@@ -3,6 +3,11 @@ using Orleans.SyncWork.Enums;
 
 namespace Orleans.SyncWork.Exceptions;
 
+/// <summary>
+/// Exception used to describe when the consumer is requests data
+/// from the <see cref="ISyncWorker{TRequest, TResult}"/>, when the grain
+/// is not in a valid state to return the requested data.
+/// </summary>
 public class InvalidStateException : Exception
 {
     SyncWorkStatus ActualStatus { get; }

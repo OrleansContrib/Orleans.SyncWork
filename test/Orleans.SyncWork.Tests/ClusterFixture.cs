@@ -6,6 +6,9 @@ using Orleans.TestingHost;
 
 namespace Orleans.SyncWork.Tests;
 
+/// <summary>
+/// Fixture for creating and eventually disposing a <see cref="TestCluster"/> for use in testing.
+/// </summary>
 public class ClusterFixture : IDisposable
 {
     public class TestSiloConfigurations : ISiloConfigurator

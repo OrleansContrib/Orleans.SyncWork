@@ -42,7 +42,7 @@ This package introduces a few "requirements" against Orleans:
 Extend the base class to implement a long running grain (example: [PasswordVerifier](https://github.com/Kritner/Orleans.SyncWork/blob/main/samples/Orleans.SyncWork.Demo.Api/Services/Grains/PasswordVerifier.cs)).
 
 ```cs
-public class PasswordVerifier : SyncWorker<PasswordVerifierRequest, PasswordVerifierResponse>, IGrain
+public class PasswordVerifier : SyncWorker<PasswordVerifierRequest, PasswordVerifierResult>, IGrain
 {
     private readonly IPasswordVerifier _passwordVerifier;
 
@@ -54,11 +54,11 @@ public class PasswordVerifier : SyncWorker<PasswordVerifierRequest, PasswordVeri
         _passwordVerifier = passwordVerifier;
     }
 
-    protected override async Task<PasswordVerifierResponse> PerformWork(PasswordVerifierRequest request)
+    protected override async Task<PasswordVerifierResult> PerformWork(PasswordVerifierRequest request)
     {
         var verifyResult = await _passwordVerifier.VerifyPassword(request.PasswordHash, request.Password);
 
-        return new PasswordVerifierResponse()
+        return new PasswordVerifierResult()
         {
             IsValid = verifyResult
         };
@@ -70,7 +70,7 @@ public class PasswordVerifierRequest
     public string PasswordHash { get; set; }
 }
 
-public class PasswordVerifierResponse
+public class PasswordVerifierResult
 {
     public bool IsValid { get; set; }
 }
@@ -84,7 +84,7 @@ var request = new PasswordVerifierRequest()
     Password = "my super neat password that's totally secure because it's super long",
     PasswordHash = "$2a$11$vBzJ4Ewx28C127AG5x3kT.QCCS8ai0l4JLX3VOX3MzHRkF4/A5twy"
 }
-var passwordVerifyGrain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResponse>>(Guid.NewGuid());
+var passwordVerifyGrain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
 var result = await passwordVerifyGrain.StartWorkAndPollUntilResult(request);
 ```
 
@@ -164,7 +164,7 @@ public class Benchy
     {
         var siloHost = await BenchmarkingSIloHost.GetSiloHost();
         var grainFactory = siloHost.Services.GetRequiredService<IGrainFactory>();
-        var grain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResponse>>(Guid.NewGuid());
+        var grain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
 
         var tasks = new List<Task>();
         for (var i = 0; i < TotalNumberPerBenchmark; i++)

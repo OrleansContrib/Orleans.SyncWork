@@ -6,6 +6,9 @@ using Xunit;
 
 namespace Orleans.SyncWork.Tests;
 
+/// <summary>
+/// Baseline "normal" grain tests.
+/// </summary>
 public class HelloWorldTests : ClusterTestBase
 {
     public HelloWorldTests(ClusterFixture fixture) : base(fixture) { }
