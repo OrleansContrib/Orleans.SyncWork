@@ -1,4 +1,6 @@
-![](https://img.shields.io/nuget/v/Orleans.SyncWork) ![](https://img.shields.io/github/license/kritner/Orleans.SyncWork)
+[![Build and test](https://github.com/Kritner/Orleans.SyncWork/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Kritner/Orleans.SyncWork/actions/workflows/ci.yml) 
+![Latest NuGet Version](https://img.shields.io/nuget/v/Orleans.SyncWork) 
+![License](https://img.shields.io/github/license/kritner/Orleans.SyncWork)
 
 This package's intention is to expose an abstract base class to allow [Orleans](https://github.com/dotnet/orleans/) to work with long running, CPU bound, synchronous work, without becoming overloaded.
 
