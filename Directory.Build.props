@@ -1,5 +1,5 @@
 <Project>
   <PropertyGroup>
-    <OrleansSyncWorkVersion Condition=" '$(OrleansSyncWorkVersion)'=='' ">0.0.2</OrleansSyncWorkVersion>
+    <OrleansSyncWorkVersion Condition=" '$(OrleansSyncWorkVersion)'=='' ">0.1.0</OrleansSyncWorkVersion>
   </PropertyGroup>
 </Project>

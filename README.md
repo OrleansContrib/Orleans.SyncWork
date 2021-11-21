@@ -166,11 +166,10 @@ public class Benchy
     {
         var siloHost = await BenchmarkingSIloHost.GetSiloHost();
         var grainFactory = siloHost.Services.GetRequiredService<IGrainFactory>();
-        var grain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
-
         var tasks = new List<Task>();
         for (var i = 0; i < TotalNumberPerBenchmark; i++)
         {
+            var grain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
             tasks.Add(grain.StartWorkAndPollUntilResult(_request));
         }
 
