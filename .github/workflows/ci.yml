@@ -1,4 +1,5 @@
-name: .NET
+name: Build and test
+description: Builds and tests the solution file located at root.
 
 on:
   push:
