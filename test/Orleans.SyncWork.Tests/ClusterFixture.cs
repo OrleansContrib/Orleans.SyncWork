@@ -17,9 +17,22 @@ public class ClusterFixture : IDisposable
         {
             siloBuilder.ConfigureServices(services => {
                 services.AddSingleton<IPasswordVerifier, PasswordVerifier>();
-                var limitedConcurrencyLevelTaskScheduler = new LimitedConcurrencyLevelTaskScheduler(Environment.ProcessorCount - 2);
+                var limitedConcurrencyLevelTaskScheduler = new LimitedConcurrencyLevelTaskScheduler(GetMaxConcurrentGrainWork());
                 services.AddSingleton(limitedConcurrencyLevelTaskScheduler);
             });
+        }
+
+        /// <summary>
+        /// CI build server is quite resource constrained, hoping doing a "minimum of 1" concurrency will still work.
+        /// </summary>
+        /// <returns>The max concurrency to register to the <see cref="LimitedConcurrencyLevelTaskScheduler"/>.</returns>
+        private static int GetMaxConcurrentGrainWork()
+        {
+            var concurrentWork = Environment.ProcessorCount - 2;
+            if (concurrentWork <= 0)
+                concurrentWork = 1;
+            
+            return concurrentWork;
         }
     }
 
