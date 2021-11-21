@@ -7,6 +7,7 @@ using Orleans.SyncWork.Demo.Api.Services;
 using Orleans.SyncWork.Demo.Api.Services.Grains;
 using Orleans.SyncWork.Demo.Api.Services.TestGrains;
 using Orleans.SyncWork.Exceptions;
+using Orleans.SyncWork.Tests.XUnitTraits;
 using Xunit;
 
 namespace Orleans.SyncWork.Tests;
@@ -18,7 +19,7 @@ public class SyncWorkerTests : ClusterTestBase
 {
     public SyncWorkerTests(ClusterFixture fixture) : base(fixture) { }
 
-    [Theory]
+    [Theory, Trait(Traits.Category, Traits.Categories.LongRunning)]
     [InlineData(1)]
     [InlineData(10)]
     [InlineData(20)]
@@ -49,7 +50,7 @@ public class SyncWorkerTests : ClusterTestBase
     /// Orleans messaging to not get overloaded.
     /// </summary>
     /// <returns></returns>
-    [Fact]
+    [Fact, Trait(Traits.Category, Traits.Categories.LongRunning)]
     public async Task WhenGivenLargeNumberOfRequests_SystemShouldNotBecomeOverloaded()
     {
         var tasks = new List<Task<PasswordVerifierResult>>();
