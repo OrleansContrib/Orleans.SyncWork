@@ -63,6 +63,7 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
         }
 
         _task = null;
+        this.DeactivateOnIdle();
 
         return Task.FromResult(_exception);
     }
@@ -77,6 +78,7 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
         }
 
         _task = null;
+        this.DeactivateOnIdle();
 
         return Task.FromResult(_result);
     }
