@@ -17,9 +17,7 @@
     <PackageProjectUrl>https://github.com/Kritner/Orleans.SyncWork</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Kritner/Orleans.SyncWork</RepositoryUrl>
 
-    <FileVersion>$(OrleansSyncWorkVersion)</FileVersion>
     <Version>$(OrleansSyncWorkVersion)</Version>
-    <AssemblyVersion>$(OrleansSyncWorkVersion)</AssemblyVersion>
     
   </PropertyGroup>
 
