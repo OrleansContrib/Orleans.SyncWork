@@ -23,7 +23,7 @@ jobs:
       run: dotnet restore
     
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build -c Release --no-restore
     
     - name: Test
-      run: dotnet test --no-build --verbosity normal --filter "Category!=LongRunning"
+      run: dotnet test -c Release --no-build --verbosity normal --filter "Category!=LongRunning"
