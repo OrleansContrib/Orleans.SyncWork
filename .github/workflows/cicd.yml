@@ -35,6 +35,7 @@ jobs:
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           NUGET_SOURCE: https://api.nuget.org
           PACKAGE_NAME: Orleans.SyncWork
-          VERSION_FILE_PATH: src/Orleans.SyncWork/Orleans.SyncWork.csproj
-          VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
+          #VERSION_FILE_PATH: src/Orleans.SyncWork/Orleans.SyncWork.csproj
+          #VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
+          VERSION_STATIC: 1.0.0
           INCLUDE_SYMBOLS: true
