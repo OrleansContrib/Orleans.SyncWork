@@ -2,6 +2,7 @@ name: Build, test, and deploy
 
 on:
   push:
+    # Do I want to build and push packages for each commit, or only on specific branches like main and "RELEASE/v*"? I'm not sure yet...
     branches:
       - '**'
 
@@ -24,13 +25,13 @@ jobs:
       run: dotnet restore
     
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build -c Release --no-restore
     
     - name: Test
-      run: dotnet test --no-restore --no-build --verbosity normal --filter "Category!=LongRunning"
+      run: dotnet test -c Release --no-restore --no-build --verbosity normal --filter "Category!=LongRunning"
 
     - name: Pack
-      run: dotnet pack src/Orleans.SyncWork/Orleans.SyncWork.csproj --no-restore --no-build --include-symbols --configuration Release -p:SymbolPackageFormat=snupkg -o .
+      run: dotnet pack src/Orleans.SyncWork/Orleans.SyncWork.csproj --c Release --no-restore --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
 
     # We should theoretically need to skip duplicates in instances where "the same commit" is pushed to multiple branches, with no other changes.
     # This would seemingly cause the same GitVersioning commit history to arrive at the same semver version?
