@@ -2,9 +2,10 @@ name: Build, test, and deploy
 
 on:
   push:
-    # Do I want to build and push packages for each commit, or only on specific branches like main and "RELEASE/v*"? I'm not sure yet...
     branches:
-      - '**'
+      - 'main'
+      - 'RELEASE/v**'
+
 
 jobs:
   build:
