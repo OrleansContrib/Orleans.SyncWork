@@ -1,7 +1,4 @@
 <Project>
-  <PropertyGroup>
-    <OrleansSyncWorkVersion Condition=" '$(OrleansSyncWorkVersion)'=='' ">0.1.0</OrleansSyncWorkVersion>
-  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Nerdbank.GitVersioning" Condition="!Exists('packages.config')">
       <Version>3.4.244</Version>
