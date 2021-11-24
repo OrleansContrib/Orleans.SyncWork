@@ -2,7 +2,8 @@ name: Build, test, and deploy
 
 on:
   push:
-    - '**'
+    branches:
+      - '**'
 
 jobs:
   build:
