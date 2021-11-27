@@ -4,6 +4,8 @@
 
 This package's intention is to expose an abstract base class to allow [Orleans](https://github.com/dotnet/orleans/) to work with long running, CPU bound, synchronous work, without becoming overloaded.
 
+Built with an open source <a href="https://jb.gg/OpenSourceSupport"><img src="docs/images/Rider_icon.svg" width=25 height=25></a> license, thanks Jetbrains!
+
 ## Project Overview
 
 There are several projects within this repository, all with the idea of demonstrating and/or testing the claim that the NuGet package https://www.nuget.org/packages/Orleans.SyncWork/ does what it is claimed it does.
