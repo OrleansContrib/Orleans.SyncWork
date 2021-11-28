@@ -1,7 +1,7 @@
 ﻿using Orleans.TestingHost;
 using Xunit;
 
-namespace Orleans.SyncWork.Tests;
+namespace Orleans.SyncWork.Tests.TestClusters;
 
 /// <summary>
 /// An abstract class containing a <see cref="TestCluster"/> for use in tests against
@@ -10,10 +10,10 @@ namespace Orleans.SyncWork.Tests;
 [Collection(ClusterCollection.Name)]
 public abstract class ClusterTestBase
 {
-    protected readonly TestCluster _cluster;
+    protected readonly TestCluster Cluster;
 
-    public ClusterTestBase(ClusterFixture fixture)
+    protected ClusterTestBase(ClusterFixture fixture)
     {
-        _cluster = fixture.Cluster;
+        Cluster = fixture.Cluster;
     }
 }

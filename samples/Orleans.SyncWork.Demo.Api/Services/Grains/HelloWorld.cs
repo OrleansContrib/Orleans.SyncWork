@@ -2,7 +2,7 @@
 
 namespace Orleans.SyncWork.Demo.Api.Services.Grains
 {
-    public class HelloWorld : Grain, IHelloWorld, IGrain
+    public class HelloWorld : Grain, IHelloWorld
     {
         public Task<string> GetGreeting(string name)
         {

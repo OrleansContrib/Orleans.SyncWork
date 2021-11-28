@@ -6,14 +6,14 @@ namespace Orleans.SyncWork.Demo.Api.Services.TestGrains;
 
 public class TestDelaySuccessRequest
 {
-    public DateTime Started { get; set; }
-    public int MsDelayPriorToResult { get; set; }
+    public DateTime Started { get; init; }
+    public int MsDelayPriorToResult { get; init; }
 }
 
 public class TestDelaySuccessResult
 {
-    public DateTime Started { get; set; }
-    public DateTime Ended { get; set; }
+    public DateTime Started { get; init; }
+    public DateTime Ended { get; init; }
 
     public TimeSpan Duration => Ended - Started;
 }

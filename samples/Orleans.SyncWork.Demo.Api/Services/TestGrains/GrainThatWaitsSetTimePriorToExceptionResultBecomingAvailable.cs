@@ -11,7 +11,7 @@ public class TestGrainException : Exception
 
 public class TestDelayExceptionRequest
 {
-    public int MsDelayPriorToResult { get; set; }
+    public int MsDelayPriorToResult { get; init; }
 }
 
 public class TestDelayExceptionResult
@@ -27,6 +27,7 @@ public class GrainThatWaitsSetTimePriorToExceptionResultBecomingAvailable : Sync
 
     protected override async Task<TestDelayExceptionResult> PerformWork(TestDelayExceptionRequest request)
     {
+        _logger.LogInformation($"Waiting {request.MsDelayPriorToResult} on {this.IdentityString}");
         await Task.Delay(request.MsDelayPriorToResult);
 
         throw new TestGrainException("This is an expected exception, I'm testing for it!");

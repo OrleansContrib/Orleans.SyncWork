@@ -46,10 +46,9 @@ public static class SyncWorkerExtensions
         await worker.Start(request);
         await Task.Delay(100);
 
-        SyncWorkStatus status;
         while (true)
         {
-            status = await worker.GetWorkStatus();
+            var status = await worker.GetWorkStatus();
 
             switch (status)
             {
