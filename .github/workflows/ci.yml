@@ -32,4 +32,4 @@ jobs:
       run: dotnet build -c Release --no-restore
     
     - name: Test
-      run: dotnet test /src/Orleans.SyncWork/Orleans.SyncWork.csproj -f ${{ matrix.target-framework }} -c Release --no-build --verbosity normal --filter "Category!=LongRunning"
+      run: dotnet test test/Orleans.SyncWork.Tests/Orleans.SyncWork.Tests.csproj -f net6.0 -c Release --no-build --verbosity normal --filter "Category!=LongRunning"
