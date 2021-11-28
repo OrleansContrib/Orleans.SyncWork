@@ -44,7 +44,7 @@ public class Benchy
     {
         var tasks = new List<Task>();
 
-        Parallel.For(0, TotalNumberPerBenchmark, i =>
+        Parallel.For(0, TotalNumberPerBenchmark, _ =>
         {
             tasks.Add(_passwordVerifier.VerifyPassword(IPasswordVerifier.PasswordHash, IPasswordVerifier.Password));
         });

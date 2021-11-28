@@ -15,7 +15,7 @@ namespace Orleans.SyncWork;
 /// </summary>
 /// <typeparam name="TRequest">The request type (arguments/parameters) for a long running piece of work.</typeparam>
 /// <typeparam name="TResult">The result/response for a long running piece of work.</typeparam>
-public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TRequest, TResult>, IGrain
+public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TRequest, TResult>
 {
     protected readonly ILogger _logger;
     private readonly LimitedConcurrencyLevelTaskScheduler _limitedConcurrencyScheduler;

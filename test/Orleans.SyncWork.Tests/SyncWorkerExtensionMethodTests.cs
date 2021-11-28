@@ -4,13 +4,14 @@ using BCrypt.Net;
 using FluentAssertions;
 using Orleans.SyncWork.Demo.Api.Services;
 using Orleans.SyncWork.Demo.Api.Services.Grains;
+using Orleans.SyncWork.Tests.TestClusters;
 using Xunit;
 
 namespace Orleans.SyncWork.Tests;
 
 /// <summary>
-/// This test class is not *necessarily* specific the the <see cref="PasswordVerifier"/> grain. It is more
-/// intended to demonstrate the workings of the "flow" of using the <see cref="ISyncWorker{TRequest, TResult}"/>
+/// This test class is not *necessarily* specific the the <see cref="Orleans.SyncWork.Demo.Api.Services.PasswordVerifier"/> grain.
+/// It is more intended to demonstrate the workings of the "flow" of using the <see cref="ISyncWorker{TRequest, TResult}"/>
 /// as far as getting expected results and exceptions from the execution of the grain using the extension method(s)
 /// in <see cref="SyncWorkerExtensions"/>.
 /// </summary>
@@ -21,7 +22,7 @@ public class SyncWorkerExtensionMethodTests : ClusterTestBase
     [Fact]
     public async Task WhenGivenValidPasswordAndHash_ShouldVerify()
     {
-        var grain = _cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
+        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
 
         var request = new PasswordVerifierRequest
         {
@@ -37,7 +38,7 @@ public class SyncWorkerExtensionMethodTests : ClusterTestBase
     [Fact]
     public async Task WhenGivenInvalidPasswordAndHash_ShouldNotVerify()
     {
-        var grain = _cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
+        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
 
         var request = new PasswordVerifierRequest
         {
@@ -53,7 +54,7 @@ public class SyncWorkerExtensionMethodTests : ClusterTestBase
     [Fact]
     public async Task WhenGivenBadHashFormat_ShouldException()
     {
-        var grain = _cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
+        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
 
         var request = new PasswordVerifierRequest
         {

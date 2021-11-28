@@ -1,8 +1,8 @@
 ﻿using Xunit;
 
-namespace Orleans.SyncWork.Tests;
+namespace Orleans.SyncWork.Tests.TestClusters;
 
-[CollectionDefinition(ClusterCollection.Name)]
+[CollectionDefinition(Name)]
 public class ClusterCollection : ICollectionFixture<ClusterFixture>
 {
     public const string Name = "ClusterCollection";

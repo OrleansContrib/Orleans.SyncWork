@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Orleans.SyncWork.Demo.Api.Services.Grains;
 
-public class PasswordVerifier : SyncWorker<PasswordVerifierRequest, PasswordVerifierResult>, IGrain
+public class PasswordVerifier : SyncWorker<PasswordVerifierRequest, PasswordVerifierResult>
 {
     private readonly IPasswordVerifier _passwordVerifier;
 
@@ -27,11 +27,11 @@ public class PasswordVerifier : SyncWorker<PasswordVerifierRequest, PasswordVeri
 }
 public class PasswordVerifierRequest
 {
-    public string Password { get; set; }
-    public string PasswordHash { get; set; }
+    public string Password { get; init; }
+    public string PasswordHash { get; init; }
 }
 
 public class PasswordVerifierResult
 {
-    public bool IsValid { get; set; }
+    public bool IsValid { get; init; }
 }

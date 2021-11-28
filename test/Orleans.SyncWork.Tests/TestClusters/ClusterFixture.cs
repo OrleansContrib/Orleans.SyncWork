@@ -4,14 +4,14 @@ using Orleans.Hosting;
 using Orleans.SyncWork.Demo.Api.Services;
 using Orleans.TestingHost;
 
-namespace Orleans.SyncWork.Tests;
+namespace Orleans.SyncWork.Tests.TestClusters;
 
 /// <summary>
 /// Fixture for creating and eventually disposing a <see cref="TestCluster"/> for use in testing.
 /// </summary>
 public class ClusterFixture : IDisposable
 {
-    public class TestSiloConfigurations : ISiloConfigurator
+    private class TestSiloConfigurations : ISiloConfigurator
     {
         public void Configure(ISiloBuilder siloBuilder)
         {
@@ -53,5 +53,5 @@ public class ClusterFixture : IDisposable
         Cluster.StopAllSilos();
     }
 
-    public TestCluster Cluster { get; private set; }
+    public TestCluster Cluster { get; }
 }
