@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace Orleans.SyncWork.Demo.Api.Services.TestGrains;
+namespace Orleans.SyncWork.Demo.Services.TestGrains;
 
 public class TestDelaySuccessRequest
 {

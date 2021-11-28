@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Orleans.SyncWork.Demo.Api.Services;
+using Orleans.SyncWork.Demo.Services;
 using Xunit;
 
 namespace Orleans.SyncWork.Tests;

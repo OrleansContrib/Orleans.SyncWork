@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net5.0;net6.0</TargetFrameworks>
+    <LangVersion>10</LangVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -21,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\samples\Orleans.SyncWork.Demo.Api\Orleans.SyncWork.Demo.Api.csproj" />
+    <ProjectReference Include="..\..\samples\Orleans.SyncWork.Demo.Services\Orleans.SyncWork.Demo.Services.csproj" />
     <ProjectReference Include="..\..\src\Orleans.SyncWork\Orleans.SyncWork.csproj" />
   </ItemGroup>
 

@@ -16,6 +16,7 @@ The projects in this repository include:
 * [Orleans.SyncWork.Tests](#orleanssyncworktests)
 * [Orleans.SyncWork.Demo.Api](#orleanssyncworkdemoapi)
 * [Orleans.SyncWork.Demo.Api.Benchmark](#orleanssyncworkdemoapibenchmark)
+* [Orleans.SyncWork.Demo.Services](#orleanssyncworkdemoservices)
 
 ### Orleans.SyncWork
 
@@ -45,7 +46,7 @@ This package introduces a few "requirements" against Orleans:
 
 #### Usage
 
-Extend the base class to implement a long running grain (example: [PasswordVerifier](https://github.com/Kritner/Orleans.SyncWork/blob/main/samples/Orleans.SyncWork.Demo.Api/Services/Grains/PasswordVerifier.cs)).
+Extend the base class to implement a long running grain.
 
 ```cs
 public class PasswordVerifier : SyncWorker<PasswordVerifierRequest, PasswordVerifierResult>, IGrain
@@ -106,7 +107,7 @@ TODO: still could use a few more unit tests here to if nothing else, document be
 
 ### Orleans.SyncWork.Demo.Api
 
-This is a demo of the `ISyncWork<TRequest, TResult>` in action.  This project is being used as both a Orleans Silo, and client.  In a more real world scenario, the grains and silo would be defined and stood up separately from the consumption of the grains, at least in the situations where I've used this design.
+This is a demo of the `ISyncWork<TRequest, TResult>` in action.  This project is being used as both a Orleans Silo, and client.  Generally you would stand up nodes to the cluster separate from the clients against the cluster.  Since we have only one node for testing purposes, this project acts as both the silo host and client.
 
 The [OrleansDashboard](https://github.com/OrleansContrib/OrleansDashboard) is also brought up with the API.  You can see an example of hitting an endpoint in which 10k password verification requests are received here:
 
@@ -192,3 +193,7 @@ And here are the results:
 |          OrleansTasks |  2.130 s | 0.0055 s | 0.0084 s |
 
 And of course note, that in the above the Orleans tasks are *limited* to my local cluster.  In a more real situation where you have multiple nodes to the cluster, you could expect to get better timing, though you'd probably have to deal more with network latency.
+
+### Orleans.SyncWork.Demo.Services
+
+This project defines several grains to demonstrate the workings of the `Orleans.SyncWork` package, through the Web API, benchmark, and tests.

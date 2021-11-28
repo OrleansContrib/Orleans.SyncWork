@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Orleans;
 using Orleans.SyncWork;
 using Orleans.SyncWork.Demo.Api;
-using Orleans.SyncWork.Demo.Api.Services.Grains;
+using Orleans.SyncWork.Demo.Services.Grains;
 
 var builder = WebApplication.CreateBuilder(args);
 

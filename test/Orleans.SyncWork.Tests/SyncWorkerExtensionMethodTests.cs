@@ -2,15 +2,15 @@
 using System.Threading.Tasks;
 using BCrypt.Net;
 using FluentAssertions;
-using Orleans.SyncWork.Demo.Api.Services;
-using Orleans.SyncWork.Demo.Api.Services.Grains;
+using Orleans.SyncWork.Demo.Services;
+using Orleans.SyncWork.Demo.Services.Grains;
 using Orleans.SyncWork.Tests.TestClusters;
 using Xunit;
 
 namespace Orleans.SyncWork.Tests;
 
 /// <summary>
-/// This test class is not *necessarily* specific the the <see cref="Orleans.SyncWork.Demo.Api.Services.PasswordVerifier"/> grain.
+/// This test class is not *necessarily* specific the the <see cref="Demo.Services.PasswordVerifier"/> grain.
 /// It is more intended to demonstrate the workings of the "flow" of using the <see cref="ISyncWorker{TRequest, TResult}"/>
 /// as far as getting expected results and exceptions from the execution of the grain using the extension method(s)
 /// in <see cref="SyncWorkerExtensions"/>.

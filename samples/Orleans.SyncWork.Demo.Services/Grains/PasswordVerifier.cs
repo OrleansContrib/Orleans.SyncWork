@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace Orleans.SyncWork.Demo.Api.Services.Grains;
+namespace Orleans.SyncWork.Demo.Services.Grains;
 
 public class PasswordVerifier : SyncWorker<PasswordVerifierRequest, PasswordVerifierResult>
 {

@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{476ED2F0-1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.SyncWork.Tests", "test\Orleans.SyncWork.Tests\Orleans.SyncWork.Tests.csproj", "{45FA9797-D1D9-4DC6-8456-D9B8A9C52102}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.SyncWork.Demo.Services", "samples\Orleans.SyncWork.Demo.Services\Orleans.SyncWork.Demo.Services.csproj", "{961EF604-582A-461C-90CE-C7FFE6C40769}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{45FA9797-D1D9-4DC6-8456-D9B8A9C52102}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45FA9797-D1D9-4DC6-8456-D9B8A9C52102}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45FA9797-D1D9-4DC6-8456-D9B8A9C52102}.Release|Any CPU.Build.0 = Release|Any CPU
+		{961EF604-582A-461C-90CE-C7FFE6C40769}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{961EF604-582A-461C-90CE-C7FFE6C40769}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{961EF604-582A-461C-90CE-C7FFE6C40769}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{961EF604-582A-461C-90CE-C7FFE6C40769}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{F3AAFF72-3922-493B-AD5F-BF8B4F7286F7} = {20B3ED9E-B5FB-47A8-B24E-9EED821AEBE3}
 		{D3E6A078-CF31-44BD-AA4E-8DDB956882D5} = {E908BC7F-91AC-4D75-A06A-97E05E765C17}
 		{45FA9797-D1D9-4DC6-8456-D9B8A9C52102} = {476ED2F0-1D97-425B-B3B7-3AF0961FE4B7}
+		{961EF604-582A-461C-90CE-C7FFE6C40769} = {20B3ED9E-B5FB-47A8-B24E-9EED821AEBE3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17BB45B7-AC08-488D-905F-11E706140C72}

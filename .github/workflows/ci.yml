@@ -3,14 +3,16 @@ name: Build and test
 on:
   pull_request:
     branches: [ main ]
-  push:
-    branches: [ main ]
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet: [ '5.0.x', '6.0.x' ]
 
+    name: Dotnet build and test targetting ${{ matrix.dotnet }}
     steps:
     - uses: actions/checkout@v2
       with:
@@ -19,7 +21,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: ${{ matrix.dotnet }}
     
     - name: Restore dependencies
       run: dotnet restore

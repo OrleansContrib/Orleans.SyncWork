@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using Orleans.Hosting;
-using Orleans.SyncWork.Demo.Api.Services;
+using Orleans.SyncWork.Demo.Services;
 using Orleans.TestingHost;
 
 namespace Orleans.SyncWork.Tests.TestClusters;
