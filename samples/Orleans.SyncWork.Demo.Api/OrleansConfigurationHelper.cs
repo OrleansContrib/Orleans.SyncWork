@@ -5,8 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orleans.Configuration;
 using Orleans.Hosting;
-using Orleans.SyncWork.Demo.Api.Services;
-using Orleans.SyncWork.Demo.Api.Services.Grains;
+using Orleans.SyncWork.Demo.Services;
+using Orleans.SyncWork.Demo.Services.Grains;
 using Orleans.SyncWork.ExtensionMethods;
 
 namespace Orleans.SyncWork.Demo.Api

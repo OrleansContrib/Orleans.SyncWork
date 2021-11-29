@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Orleans.SyncWork.Demo.Api.Services.Grains;
+using Orleans.SyncWork.Demo.Services.Grains;
 using Orleans.SyncWork.Tests.TestClusters;
 using Xunit;
 

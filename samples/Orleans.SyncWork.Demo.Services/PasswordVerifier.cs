@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Orleans.SyncWork.Demo.Api.Services;
+namespace Orleans.SyncWork.Demo.Services;
 
 public class PasswordVerifier : IPasswordVerifier
 {

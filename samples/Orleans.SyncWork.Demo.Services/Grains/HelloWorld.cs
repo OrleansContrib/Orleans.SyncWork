@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Orleans.SyncWork.Demo.Api.Services.Grains
+namespace Orleans.SyncWork.Demo.Services.Grains
 {
     public class HelloWorld : Grain, IHelloWorld
     {

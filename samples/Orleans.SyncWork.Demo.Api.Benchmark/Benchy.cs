@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using Microsoft.Extensions.DependencyInjection;
-using Orleans.SyncWork.Demo.Api.Services;
-using Orleans.SyncWork.Demo.Api.Services.Grains;
+using Orleans.SyncWork.Demo.Services;
+using Orleans.SyncWork.Demo.Services.Grains;
 
 namespace Orleans.SyncWork.Demo.Api.Benchmark;
 
