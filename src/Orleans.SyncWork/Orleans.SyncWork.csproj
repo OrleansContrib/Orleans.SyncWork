@@ -9,7 +9,8 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 
     <Authors>Kritner</Authors>
-    <Company>Kritner</Company>
+    <Company>OrleansContrib</Company>
+    <Copyright>Copyright (c) Kritner/OrleansContrib 2021.</Copyright>
     <Description>Provides an abstract base class grain to use for dispatching potentially long running, CPU bound work to an Orleans cluster.</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageIcon>OrleansLogo.png</PackageIcon>
@@ -22,8 +23,8 @@
 
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <PackageProjectUrl>https://github.com/Kritner/Orleans.SyncWork</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Kritner/Orleans.SyncWork</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/OrleansConfig/Orleans.SyncWork</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/OrleansConfig/Orleans.SyncWork</RepositoryUrl>
 
     <Version>1.0.0</Version>
   </PropertyGroup>

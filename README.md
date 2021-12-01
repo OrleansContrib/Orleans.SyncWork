@@ -1,6 +1,6 @@
-[![Build and test](https://github.com/Kritner/Orleans.SyncWork/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Kritner/Orleans.SyncWork/actions/workflows/ci.yml) 
+[![Build and test](https://github.com/OrleansContrib/Orleans.SyncWork/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/OrleansContrib/Orleans.SyncWork/actions/workflows/ci.yml) 
 ![Latest NuGet Version](https://img.shields.io/nuget/v/Orleans.SyncWork) 
-![License](https://img.shields.io/github/license/kritner/Orleans.SyncWork)
+![License](https://img.shields.io/github/license/OrleansContrib/Orleans.SyncWork)
 
 This package's intention is to expose an abstract base class to allow [Orleans](https://github.com/dotnet/orleans/) to work with long running, CPU bound, synchronous work, without becoming overloaded.
 
@@ -20,7 +20,7 @@ The projects in this repository include:
 
 ### Orleans.SyncWork
 
-The meat and potatoes of the project.  This project contains the abstraction of "Long Running, CPU bound, Synchronous work" in the form of an abstract base class [SyncWorker](https://github.com/Kritner/Orleans.SyncWork/blob/main/src/Orleans.SyncWork/SyncWorker.cs); which implements an interface [ISyncWorker](https://github.com/Kritner/Orleans.SyncWork/blob/main/src/Orleans.SyncWork/ISyncWorker.cs).
+The meat and potatoes of the project.  This project contains the abstraction of "Long Running, CPU bound, Synchronous work" in the form of an abstract base class [SyncWorker](https://github.com/OrleansContrib/Orleans.SyncWork/blob/main/src/Orleans.SyncWork/SyncWorker.cs); which implements an interface [ISyncWorker](https://github.com/OrleansContrib/Orleans.SyncWork/blob/main/src/Orleans.SyncWork/ISyncWorker.cs).
 
 When long running work is identified, you can extend the base class `SyncWorker`, providing a `TRequest` and `TResponse` unique to the long running work.  This allows you to create as many `ISyncWork<TRequest, TResponse>` implementations as necessary, for all your long running CPU bound needs! (At least that is the hope.)
 
@@ -95,7 +95,7 @@ var passwordVerifyGrain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequ
 var result = await passwordVerifyGrain.StartWorkAndPollUntilResult(request);
 ```
 
-The above `StartWorkAndPollUntilResult` is an extension method defined in the package ([SyncWorkerExtensions](https://github.com/Kritner/Orleans.SyncWork/blob/main/src/Orleans.SyncWork/SyncWorkerExtensions.cs)) that `Start`s, `Poll`s, and finally `GetResult` or `GetException` upon completed work.  There would seemingly be place for improvement here as it relates to testing unexpected scenarios, configuration based polling, etc.
+The above `StartWorkAndPollUntilResult` is an extension method defined in the package ([SyncWorkerExtensions](https://github.com/OrleansContrib/Orleans.SyncWork/blob/main/src/Orleans.SyncWork/SyncWorkerExtensions.cs)) that `Start`s, `Poll`s, and finally `GetResult` or `GetException` upon completed work.  There would seemingly be place for improvement here as it relates to testing unexpected scenarios, configuration based polling, etc.
 
 ### Orleans.SyncWork.Tests
 
