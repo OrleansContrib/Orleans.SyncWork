@@ -1,4 +1,5 @@
-[![Build and test](https://github.com/OrleansContrib/Orleans.SyncWork/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/OrleansContrib/Orleans.SyncWork/actions/workflows/ci.yml) 
+[![Build and test](https://github.com/OrleansContrib/Orleans.SyncWork/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/OrleansContrib/Orleans.SyncWork/actions/workflows/ci.yml) [![Coverage Status](https://coveralls.io/repos/github/OrleansContrib/Orleans.SyncWork/badge.svg?branch=main)](https://coveralls.io/github/OrleansContrib/Orleans.SyncWork?branch=main)
+
 ![Latest NuGet Version](https://img.shields.io/nuget/v/Orleans.SyncWork) 
 ![License](https://img.shields.io/github/license/OrleansContrib/Orleans.SyncWork)
 
