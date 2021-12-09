@@ -33,6 +33,6 @@ jobs:
     
     - name: Upload coverage
       uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: ./test/Orleans.SyncWork.Tests/TestResults/coverage.net6.0.info
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: ./test/Orleans.SyncWork.Tests/TestResults/coverage.net6.0.info
