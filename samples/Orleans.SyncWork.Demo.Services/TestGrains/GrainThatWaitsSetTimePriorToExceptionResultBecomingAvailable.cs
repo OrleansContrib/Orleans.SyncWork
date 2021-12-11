@@ -11,7 +11,7 @@ public class TestGrainException : Exception
 
 public class TestDelayExceptionRequest
 {
-    public int MsDelayPriorToResult { get; init; }
+    public int MsDelayPriorToResult { get; set; }
 }
 
 public class TestDelayExceptionResult

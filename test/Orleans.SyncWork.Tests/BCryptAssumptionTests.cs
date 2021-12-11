@@ -9,7 +9,7 @@ public class BCryptAssumptionTests
     [Fact]
     public void WhenGivenCorrectPasswordAndHash_ShouldReturnTrue()
     {
-        var verifyResult = BCrypt.Net.BCrypt.Verify(IPasswordVerifier.Password, IPasswordVerifier.PasswordHash);
+        var verifyResult = BCrypt.Net.BCrypt.Verify(PasswordConstants.Password, PasswordConstants.PasswordHash);
 
         verifyResult.Should().BeTrue();
     }
@@ -17,9 +17,9 @@ public class BCryptAssumptionTests
     [Fact]
     public void WhenGivenIncorrectPasswordAndHash_ShouldReturnFalse()
     {
-        var mangledPassword = IPasswordVerifier.Password + "doots ";
+        var mangledPassword = PasswordConstants.Password + "doots ";
 
-        var verifyResult = BCrypt.Net.BCrypt.Verify(mangledPassword, IPasswordVerifier.PasswordHash);
+        var verifyResult = BCrypt.Net.BCrypt.Verify(mangledPassword, PasswordConstants.PasswordHash);
 
         verifyResult.Should().BeFalse();
     }

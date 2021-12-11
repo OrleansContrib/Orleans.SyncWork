@@ -27,11 +27,11 @@ public class PasswordVerifier : SyncWorker<PasswordVerifierRequest, PasswordVeri
 }
 public class PasswordVerifierRequest
 {
-    public string Password { get; init; }
-    public string PasswordHash { get; init; }
+    public string Password { get; set; }
+    public string PasswordHash { get; set; }
 }
 
 public class PasswordVerifierResult
 {
-    public bool IsValid { get; init; }
+    public bool IsValid { get; set; }
 }
