@@ -7,14 +7,14 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-test:
 
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target-framework: [ 'net5.0', 'net6.0' ]
+        target-framework: [ 'netcoreapp3.1', 'net5.0', 'net6.0' ]
 
-    name: Dotnet build and test targetting ${{ matrix.target-framework }}
+    name: dotnet build and test targetting ${{ matrix.target-framework }}
     steps:
     - uses: actions/checkout@v2
       with:
@@ -24,6 +24,7 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: |
+          3.1.x
           5.0.x
           6.0.x
     
@@ -34,4 +35,4 @@ jobs:
       run: dotnet build -c Release --no-restore
     
     - name: Test
-      run: dotnet test test/Orleans.SyncWork.Tests/Orleans.SyncWork.Tests.csproj -f net6.0 -c Release --no-build --verbosity normal --filter "Category!=LongRunning"
+      run: dotnet test test/Orleans.SyncWork.Tests/Orleans.SyncWork.Tests.csproj -f ${{ matrix.target-framework }} -c Release --no-build --verbosity normal --filter "Category!=LongRunning"

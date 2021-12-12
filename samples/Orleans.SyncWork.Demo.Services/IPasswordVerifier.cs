@@ -7,9 +7,6 @@ namespace Orleans.SyncWork.Demo.Services;
 /// </summary>
 public interface IPasswordVerifier
 {
-    public const string Password = "my super neat password that's totally secure because it's super long";
-    public const string PasswordHash = "$2a$11$vBzJ4Ewx28C127AG5x3kT.QCCS8ai0l4JLX3VOX3MzHRkF4/A5twy";
-
     /// <summary>
     /// Exposes a means of verifying a password hash against a password
     /// </summary>

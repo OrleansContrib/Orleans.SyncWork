@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  calculate-code-coverage:
 
     runs-on: ubuntu-latest
 
@@ -19,6 +19,7 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: |
+          3.1.x
           5.0.x
           6.0.x
     
@@ -29,7 +30,7 @@ jobs:
       run: dotnet build -c Release --no-restore
     
     - name: Test w/ coverage
-      run: dotnet test test/Orleans.SyncWork.Tests/Orleans.SyncWork.Tests.csproj -f net6.0 -c Release --no-build --verbosity normal --filter "Category!=LongRunning" /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
+      run: dotnet test test/Orleans.SyncWork.Tests/Orleans.SyncWork.Tests.csproj -c Release --no-build --verbosity normal --filter "Category!=LongRunning" /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
     
     - name: Upload coverage
       uses: coverallsapp/github-action@master

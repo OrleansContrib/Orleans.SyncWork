@@ -30,8 +30,8 @@ public class SyncWorkerTests : ClusterTestBase
         var tasks = new List<Task<PasswordVerifierResult>>();
         var request = new PasswordVerifierRequest
         {
-            Password = IPasswordVerifier.Password,
-            PasswordHash = IPasswordVerifier.PasswordHash
+            Password = PasswordConstants.Password,
+            PasswordHash = PasswordConstants.PasswordHash
         };
         for (var i = 0; i < totalInvokes; i++)
         {
@@ -57,8 +57,8 @@ public class SyncWorkerTests : ClusterTestBase
         var tasks = new List<Task<PasswordVerifierResult>>();
         var request = new PasswordVerifierRequest
         {
-            Password = IPasswordVerifier.Password,
-            PasswordHash = IPasswordVerifier.PasswordHash
+            Password = PasswordConstants.Password,
+            PasswordHash = PasswordConstants.PasswordHash
         };
         for (var i = 0; i < 10_000; i++)
         {

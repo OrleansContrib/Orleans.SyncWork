@@ -26,8 +26,8 @@ public class SyncWorkerExtensionMethodTests : ClusterTestBase
 
         var request = new PasswordVerifierRequest
         {
-            Password = IPasswordVerifier.Password,
-            PasswordHash = IPasswordVerifier.PasswordHash
+            Password = PasswordConstants.Password,
+            PasswordHash = PasswordConstants.PasswordHash
         };
 
         var result = await grain.StartWorkAndPollUntilResult(request);
@@ -42,8 +42,8 @@ public class SyncWorkerExtensionMethodTests : ClusterTestBase
 
         var request = new PasswordVerifierRequest
         {
-            Password = IPasswordVerifier.Password + "doot",
-            PasswordHash = IPasswordVerifier.PasswordHash
+            Password = PasswordConstants.Password + "doot",
+            PasswordHash = PasswordConstants.PasswordHash
         };
 
         var result = await grain.StartWorkAndPollUntilResult(request);
@@ -58,7 +58,7 @@ public class SyncWorkerExtensionMethodTests : ClusterTestBase
 
         var request = new PasswordVerifierRequest
         {
-            Password = IPasswordVerifier.Password,
+            Password = PasswordConstants.Password,
             PasswordHash = "this is an invalid hash"
         };
 
