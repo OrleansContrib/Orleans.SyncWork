@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Orleans;
 using Orleans.SyncWork;
 using Orleans.SyncWork.Demo.Api;
@@ -40,8 +41,16 @@ app
 app
     .MapPost("/passwordVerifier", async (PasswordVerifierRequest request) =>
     {
-        var passwordVerifyGrain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
-        return await passwordVerifyGrain.StartWorkAndPollUntilResult(request);
+        try
+        {
+            var passwordVerifyGrain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
+            return await passwordVerifyGrain.StartWorkAndPollUntilResult(request);
+        }
+        catch (Exception e)
+        {
+            app.Logger.LogError(e, "Just demonstrating you can catch an exception thrown by the grain");
+            throw;
+        }
     })
     .WithName("GetPasswordVerify");
 

@@ -58,7 +58,7 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     {
         if (_status != SyncWorkStatus.Faulted)
         {
-            _logger.LogError($"{nameof(this.GetException)}: Attempting to retrieve exception from grain when grain not in a faulted state ({_status}).");
+            _logger.LogError("{nameof(this.GetException)}: Attempting to retrieve exception from grain when grain not in a faulted state ({_status}).", nameof(this.GetException), _status);
             throw new InvalidStateException(_status, SyncWorkStatus.Faulted);
         }
 
@@ -73,7 +73,7 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     {
         if (_status != SyncWorkStatus.Completed)
         {
-            _logger.LogError($"{nameof(this.GetResult)}: Attempting to retrieve result from grain when grain not in a completed state ({_status}).");
+            _logger.LogError("{nameof(this.GetResult)}: Attempting to retrieve result from grain when grain not in a completed state ({_status}).", nameof(this.GetResult), _status);
             throw new InvalidStateException(_status, SyncWorkStatus.Completed);
         }
 
