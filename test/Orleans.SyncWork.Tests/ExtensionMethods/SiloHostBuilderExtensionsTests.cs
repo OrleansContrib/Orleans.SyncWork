@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.Extensions.Hosting;
 using Orleans.Hosting;
 using Xunit;
 
@@ -14,6 +15,8 @@ public class SiloHostBuilderExtensionsTests
         var builder = new SiloHostBuilder();
         Orleans.SyncWork.ExtensionMethods.SiloHostBuilderExtensions.ConfigureSyncWorkAbstraction(builder, maxSyncWorkConcurrency);
 
+        builder.UseLocalhostClustering();
+            
         var host = builder.Build();
         var scheduler = (LimitedConcurrencyLevelTaskScheduler)host.Services.GetService(typeof(LimitedConcurrencyLevelTaskScheduler));
 
