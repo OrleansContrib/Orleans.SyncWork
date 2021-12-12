@@ -14,7 +14,7 @@ jobs:
       matrix:
         target-framework: [ 'netcoreapp3.1', 'net5.0', 'net6.0' ]
 
-    name: dotnet build and test targetting ${{ matrix.target-framework }}
+    name: dotnet build and test targeting ${{ matrix.target-framework }}
     steps:
     - uses: actions/checkout@v2
       with:

@@ -14,8 +14,6 @@ public class TestDelaySuccessResult
 {
     public DateTime Started { get; set; }
     public DateTime Ended { get; set; }
-
-    public TimeSpan Duration => Ended - Started;
 }
 
 public class GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable : SyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>
