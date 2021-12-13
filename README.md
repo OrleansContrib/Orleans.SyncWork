@@ -129,8 +129,8 @@ public class Benchy
     private readonly IPasswordVerifier _passwordVerifier = new Services.PasswordVerifier();
     private readonly PasswordVerifierRequest _request = new PasswordVerifierRequest()
     {
-        Password = IPasswordVerifier.Password,
-        PasswordHash = IPasswordVerifier.PasswordHash
+        Password = PasswordConstants.Password,
+        PasswordHash = PasswordConstants.PasswordHash
     };
 
     [Benchmark]
@@ -138,7 +138,7 @@ public class Benchy
     {
         for (var i = 0; i < TotalNumberPerBenchmark; i++)
         {
-            _passwordVerifier.VerifyPassword(IPasswordVerifier.PasswordHash, IPasswordVerifier.Password);
+            _passwordVerifier.VerifyPassword(PasswordConstants.PasswordHash, PasswordConstants.Password);
         }
     }
 
@@ -148,7 +148,7 @@ public class Benchy
         var tasks = new List<Task>();
         for (var i = 0; i < TotalNumberPerBenchmark; i++)
         {
-            tasks.Add(_passwordVerifier.VerifyPassword(IPasswordVerifier.PasswordHash, IPasswordVerifier.Password));
+            tasks.Add(_passwordVerifier.VerifyPassword(PasswordConstants.PasswordHash, PasswordConstants.Password));
         }
 
         await Task.WhenAll(tasks);
@@ -161,7 +161,7 @@ public class Benchy
 
         Parallel.For(0, TotalNumberPerBenchmark, i =>
         {
-            tasks.Add(_passwordVerifier.VerifyPassword(IPasswordVerifier.PasswordHash, IPasswordVerifier.Password));
+            tasks.Add(_passwordVerifier.VerifyPassword(PasswordConstants.PasswordHash, PasswordConstants.Password));
         });
 
         await Task.WhenAll(tasks);
