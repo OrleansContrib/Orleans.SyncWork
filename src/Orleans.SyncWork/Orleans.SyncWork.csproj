@@ -23,8 +23,8 @@
 
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <PackageProjectUrl>https://github.com/OrleansConfig/Orleans.SyncWork</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/OrleansConfig/Orleans.SyncWork</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/OrleansContrib/Orleans.SyncWork</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/OrleansContrib/Orleans.SyncWork</RepositoryUrl>
 
     <Version>1.0.0</Version>
   </PropertyGroup>
