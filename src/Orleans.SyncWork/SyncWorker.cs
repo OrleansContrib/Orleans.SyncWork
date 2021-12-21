@@ -36,11 +36,11 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     {
         if (_task != null)
         {
-            _logger.LogDebug($"{nameof(Start)}: Task already initialized upon call.");
+            _logger.LogDebug("{nameof(Start)}: Task already initialized upon call.", nameof(Start));
             return Task.FromResult(false);
         }
 
-        _logger.LogDebug($"{nameof(Start)}: Starting task, set status to running.");
+        _logger.LogDebug("{nameof(Start)}: Starting task, set status to running.", nameof(Start));
         _status = SyncWorkStatus.Running;
         _task = CreateTask(request);
 
@@ -50,6 +50,13 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     /// <inheritdoc />
     public Task<SyncWorkStatus> GetWorkStatus()
     {
+        if (_status == SyncWorkStatus.NotStarted)
+        {
+            _logger.LogError("{nameof(GetWorkStatus} was in a status of {SyncWorkStatus.NotStarted}", nameof(GetWorkStatus), SyncWorkStatus.NotStarted);
+            DeactivateOnIdle();
+            throw new InvalidStateException(_status);
+        }
+        
         return Task.FromResult(_status);
     }
 
@@ -58,7 +65,8 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     {
         if (_status != SyncWorkStatus.Faulted)
         {
-            _logger.LogError("{nameof(this.GetException)}: Attempting to retrieve exception from grain when grain not in a faulted state ({_status}).", nameof(this.GetException), _status);
+            _logger.LogError("{nameof(GetException)}: Attempting to retrieve exception from grain when grain not in a faulted state ({_status}).", nameof(GetException), _status);
+            DeactivateOnIdle();
             throw new InvalidStateException(_status, SyncWorkStatus.Faulted);
         }
 
@@ -73,12 +81,13 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     {
         if (_status != SyncWorkStatus.Completed)
         {
-            _logger.LogError("{nameof(this.GetResult)}: Attempting to retrieve result from grain when grain not in a completed state ({_status}).", nameof(this.GetResult), _status);
+            _logger.LogError("{nameof(GetResult)}: Attempting to retrieve result from grain when grain not in a completed state ({_status}).", nameof(GetResult), _status);
+            DeactivateOnIdle();
             throw new InvalidStateException(_status, SyncWorkStatus.Completed);
         }
 
         _task = null;
-        this.DeactivateOnIdle();
+        DeactivateOnIdle();
 
         return Task.FromResult(_result);
     }
@@ -101,15 +110,15 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
         {
             try
             {
-                _logger.LogInformation($"{nameof(this.CreateTask)}: Beginning work for task.");
+                _logger.LogInformation("{nameof(CreateTask)}: Beginning work for task.", nameof(CreateTask));
                 _result = await PerformWork(request);
                 _exception = default;
                 _status = SyncWorkStatus.Completed;
-                _logger.LogInformation($"{nameof(this.CreateTask)}: Completed work for task.");
+                _logger.LogInformation("{nameof(CreateTask)}: Completed work for task.", nameof(CreateTask));
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"{nameof(this.CreateTask)}: Exception during task.");
+                _logger.LogError(e, "{nameof(CreateTask)}: Exception during task.", nameof(CreateTask));
                 _result = default;
                 _exception = e;
                 _status = SyncWorkStatus.Faulted;
