@@ -71,13 +71,22 @@ public class SyncWorkerTests : ClusterTestBase
         tasks.Select(task => task.Result).Should().OnlyContain(result => true);
     }
 
+    /// <summary>
+    /// This is to protect against cases where the silo restarts and the instance state is lost.
+    /// The class' intention is to always start work with a request, request the status, retrieve the result.
+    ///
+    /// If the silo restarts, the "worked" task is lost, and status reset to "NotStarted", throwing in that scenario
+    /// allows for a faster turnaround on the side of consumers in order to handle the silo restart - probably by
+    /// redispatching the work.
+    /// </summary>
     [Fact]
-    public async Task WhenGrainNotStarted_ShouldHaveStatusNotRunning()
+    public async Task WhenGrainNotStarted_ShouldThrowOnAttemptingToRetrieveStatus()
     {
         var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>>(Guid.NewGuid());
-        var result = await grain.GetWorkStatus();
 
-        result.Should().Be(Enums.SyncWorkStatus.NotStarted);
+        var action = new Func<Task>(async () => await grain.GetWorkStatus());
+
+        await action.Should().ThrowAsync<InvalidStateException>();
     }
 
     [Fact]

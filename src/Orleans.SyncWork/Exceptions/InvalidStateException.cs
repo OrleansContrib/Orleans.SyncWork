@@ -10,8 +10,11 @@ namespace Orleans.SyncWork.Exceptions;
 /// </summary>
 public class InvalidStateException : Exception
 {
+    public InvalidStateException(string message) : base(message) { }
+    
+    public InvalidStateException(SyncWorkStatus unexpectedStatus) : base(
+        $"Grain was in an invalid state of {unexpectedStatus}.") { }
+    
     public InvalidStateException(SyncWorkStatus actualStatus, SyncWorkStatus expectedStatus) : base(
-        $"Grain was in an invalid state for the requested grain method.  Expected status {expectedStatus}, got {actualStatus}.")
-    {
-    }
+        $"Grain was in an invalid state for the requested grain method.  Expected status {expectedStatus}, got {actualStatus}.") { }
 }

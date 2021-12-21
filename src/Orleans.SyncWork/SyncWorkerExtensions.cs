@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Orleans.SyncWork.Enums;
+using Orleans.SyncWork.Exceptions;
 
 namespace Orleans.SyncWork;
 
@@ -61,7 +62,7 @@ public static class SyncWorkerExtensions
                     var exception = await worker.GetException();
                     throw exception;
                 case SyncWorkStatus.NotStarted:
-                    throw new Exception("This shouldn't happen, but if it does, I'm assuming it means the cluster may have died, or a timeout occurred and the grain got reinstantiated without firing off the work.");
+                    throw new InvalidStateException("This shouldn't happen, but if it does, it probably means the cluster may have died and restarted, and/or a timeout occurred and the grain got reinstantiated without firing off the work.");
                 default:
                     throw new Exception("How did we even get here...?");
             }
