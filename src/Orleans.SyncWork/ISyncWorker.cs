@@ -12,9 +12,9 @@ namespace Orleans.SyncWork;
 public interface ISyncWorker<in TRequest, TResult> : IGrainWithGuidKey
 {
     /// <summary>
-    /// Start long running work with the provided <see cref="TRequest"/>.
+    /// Start long running work with the provided parameter.
     /// </summary>
-    /// <param name="request">The <see cref="TRequest"/> workload to start.</param>
+    /// <param name="request">The parameter containing all necessary information to start the workload.</param>
     /// <returns>true if work is started, false if it was already started.</returns>
     Task<bool> Start(TRequest request);
     /// <summary>
@@ -25,7 +25,7 @@ public interface ISyncWorker<in TRequest, TResult> : IGrainWithGuidKey
     /// <summary>
     /// The result of the long running work.
     /// </summary>
-    /// <returns>The <see cref="TResult"/></returns>
+    /// <returns>The result of the work done through the SyncWorker.</returns>
     Task<TResult> GetResult();
     /// <summary>
     /// Gets the exception information when the long running work faulted.
