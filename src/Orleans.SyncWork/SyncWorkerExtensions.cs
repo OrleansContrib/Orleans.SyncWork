@@ -30,7 +30,7 @@ public static class SyncWorkerExtensions
     /// Starts the work of a <see cref="ISyncWorker{TRequest, TResult}"/>, polls it until a result is available, then returns it.
     /// </summary>
     /// <remarks>
-    ///     Caution is advised when setting the <see cref="msDelayPerStatusPoll"/> "too low" - 1000 ms seems to be pretty safe, 
+    ///     Caution is advised when setting the msDelayPerStatusPoll "too low" - 1000 ms seems to be pretty safe, 
     ///     but if the cluster is under *enough* load, that much grain polling could overwhelm it.
     /// </remarks>
     /// <typeparam name="TRequest">The type of request being dispatched.</typeparam>

@@ -17,6 +17,9 @@ namespace Orleans.SyncWork;
 /// <typeparam name="TResult">The result/response for a long running piece of work.</typeparam>
 public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TRequest, TResult>
 {
+    /// <summary>
+    /// The logger for the instance.
+    /// </summary>
     protected readonly ILogger _logger;
     private readonly LimitedConcurrencyLevelTaskScheduler _limitedConcurrencyScheduler;
 
@@ -25,6 +28,11 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     private Exception _exception;
     private Task _task;
 
+    /// <summary>
+    /// Constructs an instance of the <see cref="SyncWorker{TRequest,TResult}"/>.
+    /// </summary>
+    /// <param name="logger">The logger for the instance</param>
+    /// <param name="limitedConcurrencyScheduler">The task scheduler that will be used for the long running work.</param>
     protected SyncWorker(ILogger logger, LimitedConcurrencyLevelTaskScheduler limitedConcurrencyScheduler)
     {
         _logger = logger;
