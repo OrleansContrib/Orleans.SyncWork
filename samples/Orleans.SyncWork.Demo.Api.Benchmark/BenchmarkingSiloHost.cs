@@ -13,5 +13,4 @@ internal static class BenchmarkingSIloHost
 
         return _siloHost;
     }
-    
 }

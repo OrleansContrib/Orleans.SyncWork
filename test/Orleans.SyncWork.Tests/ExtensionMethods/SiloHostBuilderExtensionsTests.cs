@@ -20,13 +20,13 @@ public class SiloHostBuilderExtensionsTests
         var builder = new SiloHostBuilder();
 
         builder.UseLocalhostClustering();
-            
+
         var host = builder.Build();
         var scheduler = (LimitedConcurrencyLevelTaskScheduler)host.Services.GetService(typeof(LimitedConcurrencyLevelTaskScheduler));
 
         scheduler.Should().BeNull("The extension method was not used to register the scheduler");
     }
-    
+
     [Theory]
     [InlineData(4)]
     [InlineData(8)]
@@ -36,7 +36,7 @@ public class SiloHostBuilderExtensionsTests
         builder.ConfigureSyncWorkAbstraction(maxSyncWorkConcurrency);
 
         builder.UseLocalhostClustering();
-            
+
         var host = builder.Build();
         var scheduler = (LimitedConcurrencyLevelTaskScheduler)host.Services.GetService(typeof(LimitedConcurrencyLevelTaskScheduler));
 

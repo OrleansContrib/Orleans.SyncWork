@@ -7,6 +7,15 @@ This package's intention is to expose an abstract base class to allow [Orleans](
 
 Built with an open source <a href="https://jb.gg/OpenSourceSupport"><img src="docs/images/Rider_icon.svg" width=25 height=25></a> license, thanks Jetbrains!
 
+## Building
+
+The project is built primarily with .net6 in mind, though the test project is currently targeting netcoreapp3.1, and .net5.  
+
+### Requirements
+
+* [.net 6.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+* [dotnet-format](https://github.com/dotnet/format)
+
 ## Project Overview
 
 There are several projects within this repository, all with the idea of demonstrating and/or testing the claim that the NuGet package https://www.nuget.org/packages/Orleans.SyncWork/ does what it is claimed it does.

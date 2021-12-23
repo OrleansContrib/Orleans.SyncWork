@@ -64,7 +64,7 @@ app
             var passwordVerifyGrain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
             tasks.Add(passwordVerifyGrain.StartWorkAndPollUntilResult(request));
         }
-        
+
         await Task.WhenAll(tasks);
 
         var allGood = tasks

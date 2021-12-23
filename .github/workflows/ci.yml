@@ -5,18 +5,42 @@ on:
     branches: [ main ]
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
+
+  check-code-formatting:
+    runs-on: ubuntu-latest
+    name: Check code formating against editorconfig
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Install dotnet-format tool
+      run: dotnet tool install -g dotnet-format
+    
+    - name: Check Code Format
+      run: dotnet-format --check
+
   build-and-test:
 
     runs-on: ubuntu-latest
     strategy:
       matrix:
         target-framework: [ 'netcoreapp3.1', 'net5.0', 'net6.0' ]
-
     name: dotnet build and test targeting ${{ matrix.target-framework }}
+
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
       with:
         fetch-depth: 0
 

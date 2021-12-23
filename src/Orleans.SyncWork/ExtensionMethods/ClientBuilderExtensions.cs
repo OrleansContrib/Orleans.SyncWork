@@ -1,4 +1,4 @@
-namespace Orleans.SyncWork.ExtensionMethods;
+﻿namespace Orleans.SyncWork.ExtensionMethods;
 
 /// <summary>
 /// Extension methods for <see cref="IClientBuilder"/>.

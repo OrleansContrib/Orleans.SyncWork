@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Orleans.SyncWork.Demo.Services.TestGrains;
 
-public class TestGrainException : Exception 
+public class TestGrainException : Exception
 {
     public TestGrainException(string message) : base(message) { }
 }
