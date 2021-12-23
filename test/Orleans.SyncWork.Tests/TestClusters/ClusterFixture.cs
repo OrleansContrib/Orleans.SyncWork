@@ -15,7 +15,8 @@ public class ClusterFixture : IDisposable
     {
         public void Configure(ISiloBuilder siloBuilder)
         {
-            siloBuilder.ConfigureServices(services => {
+            siloBuilder.ConfigureServices(services =>
+            {
                 services.AddSingleton<IPasswordVerifier, PasswordVerifier>();
                 var limitedConcurrencyLevelTaskScheduler = new LimitedConcurrencyLevelTaskScheduler(GetMaxConcurrentGrainWork());
                 services.AddSingleton(limitedConcurrencyLevelTaskScheduler);
@@ -31,7 +32,7 @@ public class ClusterFixture : IDisposable
             var concurrentWork = Environment.ProcessorCount - 2;
             if (concurrentWork <= 0)
                 concurrentWork = 1;
-            
+
             return concurrentWork;
         }
     }

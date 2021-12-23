@@ -64,7 +64,7 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
             DeactivateOnIdle();
             throw new InvalidStateException(_status);
         }
-        
+
         return Task.FromResult(_status);
     }
 

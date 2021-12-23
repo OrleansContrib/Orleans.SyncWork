@@ -101,7 +101,7 @@ public class SyncWorkerTests : ClusterTestBase
         });
 
         var status = await grain.GetWorkStatus();
-        
+
         status.Should().Be(Enums.SyncWorkStatus.Running);
 
         await Task.Delay(delay * 2);

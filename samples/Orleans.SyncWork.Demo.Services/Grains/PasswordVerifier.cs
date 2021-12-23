@@ -8,8 +8,8 @@ public class PasswordVerifier : SyncWorker<PasswordVerifierRequest, PasswordVeri
     private readonly IPasswordVerifier _passwordVerifier;
 
     public PasswordVerifier(
-        ILogger<PasswordVerifier> logger, 
-        LimitedConcurrencyLevelTaskScheduler limitedConcurrencyLevelTaskScheduler, 
+        ILogger<PasswordVerifier> logger,
+        LimitedConcurrencyLevelTaskScheduler limitedConcurrencyLevelTaskScheduler,
         IPasswordVerifier passwordVerifier) : base(logger, limitedConcurrencyLevelTaskScheduler)
     {
         _passwordVerifier = passwordVerifier;
