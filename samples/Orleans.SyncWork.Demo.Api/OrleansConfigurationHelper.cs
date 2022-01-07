@@ -43,7 +43,7 @@ namespace Orleans.SyncWork.Demo.Api
                         config.Port = 8081;
                     });
             });
-            
+
             return builder;
         }
     }

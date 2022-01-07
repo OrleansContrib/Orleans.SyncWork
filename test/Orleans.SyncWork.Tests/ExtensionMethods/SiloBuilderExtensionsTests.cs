@@ -28,7 +28,7 @@ public class SiloBuilderExtensionsTests
         var builder = new HostBuilder()
             .UseOrleans(builder =>
             {
-                builder.ConfigureSyncWorkAbstraction(maxSyncWorkConcurrency);        
+                builder.ConfigureSyncWorkAbstraction(maxSyncWorkConcurrency);
                 builder.UseLocalhostClustering();
             });
 
