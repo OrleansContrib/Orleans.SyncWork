@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Orleans.Hosting;
 using Orleans.SyncWork.Demo.Services;
+using Orleans.SyncWork.ExtensionMethods;
 using Orleans.TestingHost;
 
 namespace Orleans.SyncWork.Tests.TestClusters;
@@ -15,11 +16,11 @@ public class ClusterFixture : IDisposable
     {
         public void Configure(ISiloBuilder siloBuilder)
         {
+            siloBuilder.ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IPasswordVerifier).Assembly).WithReferences());
+            siloBuilder.ConfigureSyncWorkAbstraction(GetMaxConcurrentGrainWork());
             siloBuilder.ConfigureServices(services =>
             {
                 services.AddSingleton<IPasswordVerifier, PasswordVerifier>();
-                var limitedConcurrencyLevelTaskScheduler = new LimitedConcurrencyLevelTaskScheduler(GetMaxConcurrentGrainWork());
-                services.AddSingleton(limitedConcurrencyLevelTaskScheduler);
             });
         }
 
@@ -41,8 +42,6 @@ public class ClusterFixture : IDisposable
     {
         var builder = new TestClusterBuilder();
 
-        // TODO is there no way to just use the `ISiloHostBuilder` configuration being built for the *actual* silo?
-        // Why is it using a `ISiloBuilder` rather than `ISiloHostBuilder`?
         builder.AddSiloBuilderConfigurator<TestSiloConfigurations>();
 
         Cluster = builder.Build();
