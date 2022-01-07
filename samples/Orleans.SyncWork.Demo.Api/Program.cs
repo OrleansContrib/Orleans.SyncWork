@@ -11,14 +11,12 @@ using Orleans.SyncWork.Demo.Api;
 using Orleans.SyncWork.Demo.Services.Grains;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.ConfigureOrleans(Environment.ProcessorCount - 2);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-var orleans = await OrleansConfigurationHelper.StartSilo();
-builder.Services.AddSingleton(orleans);
 
 var app = builder.Build();
 
@@ -28,7 +26,7 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-var grainFactory = orleans.Services.GetRequiredService<IGrainFactory>();
+var grainFactory = app.Services.GetRequiredService<IGrainFactory>();
 
 app
     .MapGet("/helloWorld", async (string name) =>

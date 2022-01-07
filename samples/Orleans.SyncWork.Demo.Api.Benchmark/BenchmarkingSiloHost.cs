@@ -1,16 +1,21 @@
 ﻿using System.Threading.Tasks;
 using Orleans.Hosting;
+using Orleans.SyncWork.Tests.TestClusters;
+using Orleans.TestingHost;
 
 namespace Orleans.SyncWork.Demo.Api.Benchmark;
 
-internal static class BenchmarkingSIloHost
+internal static class BenchmarkingSiloHost
 {
-    static ISiloHost _siloHost;
-    public static async Task<ISiloHost> GetSiloHost()
+    static TestCluster _testCluster;
+    public static TestCluster GetTestCluster()
     {
-        if (_siloHost == null)
-            _siloHost = await OrleansConfigurationHelper.StartSilo();
+        if (_testCluster == null)
+        {
+            var clusterFixture = new ClusterFixture();
+            _testCluster = clusterFixture.Cluster;
+        }
 
-        return _siloHost;
+        return _testCluster;
     }
 }

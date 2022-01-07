@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
-using Microsoft.Extensions.DependencyInjection;
 using Orleans.SyncWork.Demo.Services;
 using Orleans.SyncWork.Demo.Services.Grains;
 
@@ -12,7 +11,7 @@ public class Benchy
 {
     const int TotalNumberPerBenchmark = 100;
     private readonly IPasswordVerifier _passwordVerifier = new Services.PasswordVerifier();
-    private readonly PasswordVerifierRequest _request = new PasswordVerifierRequest()
+    private readonly PasswordVerifierRequest _request = new()
     {
         Password = PasswordConstants.Password,
         PasswordHash = PasswordConstants.PasswordHash
@@ -55,8 +54,8 @@ public class Benchy
     [Benchmark]
     public async Task OrleansTasks()
     {
-        var siloHost = await BenchmarkingSIloHost.GetSiloHost();
-        var grainFactory = siloHost.Services.GetRequiredService<IGrainFactory>();
+        var grainFactory = BenchmarkingSiloHost.GetTestCluster().GrainFactory;
+
         var tasks = new List<Task>();
         for (var i = 0; i < TotalNumberPerBenchmark; i++)
         {

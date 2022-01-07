@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\test\Orleans.SyncWork.Tests\Orleans.SyncWork.Tests.csproj" />
     <ProjectReference Include="..\Orleans.SyncWork.Demo.Api\Orleans.SyncWork.Demo.Api.csproj" />
   </ItemGroup>
 
