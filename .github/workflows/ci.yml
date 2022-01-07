@@ -33,10 +33,7 @@ jobs:
   build-and-test:
 
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        target-framework: [ 'netcoreapp3.1', 'net5.0', 'net6.0' ]
-    name: dotnet build and test targeting ${{ matrix.target-framework }}
+    name: dotnet build and test
 
     steps:
     - name: Checkout code
@@ -47,10 +44,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: |
-          3.1.x
-          5.0.x
-          6.0.x
+        dotnet-version: 6.0.x
     
     - name: Restore dependencies
       run: dotnet restore
@@ -59,4 +53,4 @@ jobs:
       run: dotnet build -c Release --no-restore
     
     - name: Test
-      run: dotnet test test/Orleans.SyncWork.Tests/Orleans.SyncWork.Tests.csproj -f ${{ matrix.target-framework }} -c Release --no-build --verbosity normal --filter "Category!=LongRunning"
+      run: dotnet test test/Orleans.SyncWork.Tests/Orleans.SyncWork.Tests.csproj -c Release --no-build --verbosity normal --filter "Category!=LongRunning"
