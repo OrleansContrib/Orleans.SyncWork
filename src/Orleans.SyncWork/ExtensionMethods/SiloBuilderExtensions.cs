@@ -1,18 +1,17 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Orleans.Hosting;
 
 namespace Orleans.SyncWork.ExtensionMethods;
 
 /// <summary>
-/// Extension methods for <see cref="ISiloHostBuilder"/>.
+/// Extension methods for <see cref="ISiloBuilder"/>.
 /// </summary>
-public static class SiloHostBuilderExtensions
+public static class SiloBuilderExtensions
 {
     /// <summary>
     /// Configures assembly scanning against this assembly containing the <see cref="ISyncWorker{TRequest, TResult}"/>.
     /// </summary>
-    /// <param name="builder">The <see cref="ISiloHostBuilder"/> instance.</param>
+    /// <param name="builder">The <see cref="ISiloBuilder"/> instance.</param>
     /// <param name="maxSyncWorkConcurrency">
     ///     The maximum amount of concurrent work to perform at a time.  
     ///     The CPU cannot be "tapped out" with concurrent work lest Orleans experience timeouts.
@@ -22,8 +21,8 @@ public static class SiloHostBuilderExtensions
     ///     A "general" rule of thumb that I've had success with is using "Environment.ProcessorCount - 2" as the max concurrency.
     /// 
     /// </remarks>
-    /// <returns>The <see cref="ISiloHostBuilder"/> to allow additional fluent API chaining.</returns>
-    public static ISiloHostBuilder ConfigureSyncWorkAbstraction(this ISiloHostBuilder builder, int maxSyncWorkConcurrency = 4)
+    /// <returns>The <see cref="ISiloBuilder"/> to allow additional fluent API chaining.</returns>
+    public static ISiloBuilder ConfigureSyncWorkAbstraction(this ISiloBuilder builder, int maxSyncWorkConcurrency = 4)
     {
         builder.ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(ISyncWorkAbstractionMarker).Assembly).WithReferences());
 

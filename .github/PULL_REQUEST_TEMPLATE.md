@@ -11,7 +11,6 @@ Use an `x` in between the `[ ]` for each line applicable to the type of change f
 * [ ] Bug fix
 * [ ] New Feature
 * [ ] Documentation
-* [ ] Code improvment
 * [ ] Code improvement
 * [ ] Breaking change - if a public API changes, or any change that ***DOES*** or ***MAY*** require a major revision to the NuGet package version due to [semver](https://semver.org/).
 * [ ] Unit tests
