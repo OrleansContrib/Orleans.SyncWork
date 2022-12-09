@@ -16,7 +16,6 @@ public class ClusterFixture : IDisposable
     {
         public void Configure(ISiloBuilder siloBuilder)
         {
-            siloBuilder.ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(IPasswordVerifier).Assembly).WithReferences());
             siloBuilder.ConfigureSyncWorkAbstraction(GetMaxConcurrentGrainWork());
             siloBuilder.ConfigureServices(services =>
             {

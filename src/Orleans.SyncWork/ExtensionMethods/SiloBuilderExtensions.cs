@@ -9,7 +9,7 @@ namespace Orleans.SyncWork.ExtensionMethods;
 public static class SiloBuilderExtensions
 {
     /// <summary>
-    /// Configures assembly scanning against this assembly containing the <see cref="ISyncWorker{TRequest, TResult}"/>.
+    /// Adds <see cref="LimitedConcurrencyLevelTaskScheduler"/> to service provider.
     /// </summary>
     /// <param name="builder">The <see cref="ISiloBuilder"/> instance.</param>
     /// <param name="maxSyncWorkConcurrency">
@@ -24,8 +24,6 @@ public static class SiloBuilderExtensions
     /// <returns>The <see cref="ISiloBuilder"/> to allow additional fluent API chaining.</returns>
     public static ISiloBuilder ConfigureSyncWorkAbstraction(this ISiloBuilder builder, int maxSyncWorkConcurrency = 4)
     {
-        builder.ConfigureApplicationParts(parts => parts.AddApplicationPart(typeof(ISyncWorkAbstractionMarker).Assembly).WithReferences());
-
         builder.ConfigureServices(services =>
         {
             services.AddSingleton(_ => new LimitedConcurrencyLevelTaskScheduler(maxSyncWorkConcurrency));

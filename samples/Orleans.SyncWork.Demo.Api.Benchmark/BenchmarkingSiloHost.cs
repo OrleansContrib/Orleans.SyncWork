@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Orleans.Hosting;
-using Orleans.SyncWork.Tests.TestClusters;
+﻿using Orleans.SyncWork.Tests.TestClusters;
 using Orleans.TestingHost;
 
 namespace Orleans.SyncWork.Demo.Api.Benchmark;
