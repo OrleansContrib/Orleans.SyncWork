@@ -25,13 +25,19 @@ public class PasswordVerifier : SyncWorker<PasswordVerifierRequest, PasswordVeri
         };
     }
 }
+
+[GenerateSerializer]
 public class PasswordVerifierRequest
 {
+    [Id(0)]
     public string Password { get; set; }
+    [Id(1)]
     public string PasswordHash { get; set; }
 }
 
+[GenerateSerializer]
 public class PasswordVerifierResult
 {
+    [Id(0)]
     public bool IsValid { get; set; }
 }

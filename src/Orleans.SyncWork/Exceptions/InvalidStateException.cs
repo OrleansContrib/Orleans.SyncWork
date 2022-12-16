@@ -8,6 +8,7 @@ namespace Orleans.SyncWork.Exceptions;
 /// from the <see cref="ISyncWorker{TRequest, TResult}"/>, when the grain
 /// is not in a valid state to return the requested data.
 /// </summary>
+[GenerateSerializer]
 public class InvalidStateException : Exception
 {
     /// <summary>

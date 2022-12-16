@@ -4,16 +4,20 @@ using Microsoft.Extensions.Logging;
 
 namespace Orleans.SyncWork.Demo.Services.TestGrains;
 
+[GenerateSerializer]
 public class TestGrainException : Exception
 {
     public TestGrainException(string message) : base(message) { }
 }
 
+[GenerateSerializer]
 public class TestDelayExceptionRequest
 {
+    [Id(0)]
     public int MsDelayPriorToResult { get; set; }
 }
 
+[GenerateSerializer]
 public class TestDelayExceptionResult
 {
 }

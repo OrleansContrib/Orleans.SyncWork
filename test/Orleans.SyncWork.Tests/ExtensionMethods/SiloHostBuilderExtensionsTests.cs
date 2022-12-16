@@ -1,13 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using FluentAssertions;
-using Microsoft.Extensions.Configuration;
+﻿using FluentAssertions;
 using Microsoft.Extensions.Hosting;
 using Orleans.Hosting;
-using Orleans.SyncWork.Demo.Services.Grains;
 using Orleans.SyncWork.ExtensionMethods;
-using Orleans.SyncWork.Tests.TestGrains;
-using Orleans.TestingHost;
 using Xunit;
 
 namespace Orleans.SyncWork.Tests.ExtensionMethods;
@@ -17,9 +11,11 @@ public class SiloHostBuilderExtensionsTests
     [Fact]
     public void WhenNotCallingConfigure_ShouldNotResolveLimitedConcurrencyScheduler()
     {
-        var builder = new SiloHostBuilder();
-
-        builder.UseLocalhostClustering();
+        var builder = new HostBuilder()
+            .UseOrleans(orleansBuilder =>
+            {
+                orleansBuilder.UseLocalhostClustering();
+            });
 
         var host = builder.Build();
         var scheduler = (LimitedConcurrencyLevelTaskScheduler)host.Services.GetService(typeof(LimitedConcurrencyLevelTaskScheduler));
@@ -32,10 +28,12 @@ public class SiloHostBuilderExtensionsTests
     [InlineData(8)]
     public void WhenCallingConfigure_ShouldRegisterLimitedConcurrencyScheduler(int maxSyncWorkConcurrency)
     {
-        var builder = new SiloHostBuilder();
-        builder.ConfigureSyncWorkAbstraction(maxSyncWorkConcurrency);
-
-        builder.UseLocalhostClustering();
+        var builder = new HostBuilder()
+            .UseOrleans(orleansBuilder =>
+            {
+                orleansBuilder.ConfigureSyncWorkAbstraction(maxSyncWorkConcurrency);
+                orleansBuilder.UseLocalhostClustering();
+            });
 
         var host = builder.Build();
         var scheduler = (LimitedConcurrencyLevelTaskScheduler)host.Services.GetService(typeof(LimitedConcurrencyLevelTaskScheduler));

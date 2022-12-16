@@ -30,8 +30,6 @@ namespace Orleans.SyncWork.Demo.Api
                         options.ServiceId = "HelloWorldApp";
                     })
                     .Configure<EndpointOptions>(options => options.AdvertisedIPAddress = IPAddress.Loopback)
-                    .ConfigureApplicationParts(parts =>
-                        parts.AddApplicationPart(typeof(IHelloWorld).Assembly).WithReferences())
                     .ConfigureSyncWorkAbstraction(maxSyncWorkConcurrency)
                     .ConfigureLogging(logging => logging.AddConsole())
                     .ConfigureServices(collection =>
