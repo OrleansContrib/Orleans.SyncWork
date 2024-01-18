@@ -83,7 +83,7 @@ public class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
                         item = _tasks.First?.Value;
                         if (item is null)
                             break;
-                        
+
                         _tasks.RemoveFirst();
                     }
 
