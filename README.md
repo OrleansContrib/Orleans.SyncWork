@@ -9,11 +9,13 @@ Built with an open source <a href="https://jb.gg/OpenSourceSupport"><img src="do
 
 ## Building
 
-The project is built primarily with .net6 in mind, though the test project is currently targeting netcoreapp3.1, and .net5.  
+The project was built primarily with .net3 in mind, though the varying major version releases support .net6, .net7, and .net8; depending on the package version (should mirror the .net versions).
 
 ### Requirements
 
 * [.net 6.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+* [.net 7.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
+* [.net 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 * [dotnet-format](https://github.com/dotnet/format)
 
 ## Project Overview
