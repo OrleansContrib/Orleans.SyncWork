@@ -68,7 +68,7 @@ public class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
                 // Process all available items in the queue.
                 while (true)
                 {
-                    Task item;
+                    Task? item;
                     lock (_tasks)
                     {
                         // When there are no more items to be processed,
@@ -80,7 +80,10 @@ public class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
                         }
 
                         // Get the next item from the queue
-                        item = _tasks.First.Value;
+                        item = _tasks.First?.Value;
+                        if (item is null)
+                            break;
+
                         _tasks.RemoveFirst();
                     }
 

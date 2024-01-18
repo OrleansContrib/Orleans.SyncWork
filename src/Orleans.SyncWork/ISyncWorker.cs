@@ -26,10 +26,10 @@ public interface ISyncWorker<in TRequest, TResult> : IGrainWithGuidKey
     /// The result of the long running work.
     /// </summary>
     /// <returns>The result of the work done through the SyncWorker.</returns>
-    Task<TResult> GetResult();
+    Task<TResult?> GetResult();
     /// <summary>
     /// Gets the exception information when the long running work faulted.
     /// </summary>
     /// <returns>The exception information as it relates to the failure.</returns>
-    Task<Exception> GetException();
+    Task<Exception?> GetException();
 }

@@ -1,14 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <LangVersion>11</LangVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="BCrypt.Net-Next" Version="4.0.2" />
-    <PackageReference Include="Microsoft.Orleans.Sdk" Version="7.0.0" />
+    <PackageReference Include="BCrypt.Net-Next" />
+    <PackageReference Include="Microsoft.Orleans.Sdk" />
   </ItemGroup>
   
   <ItemGroup>

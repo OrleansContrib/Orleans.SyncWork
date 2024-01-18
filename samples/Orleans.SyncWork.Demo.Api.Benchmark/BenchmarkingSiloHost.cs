@@ -5,7 +5,7 @@ namespace Orleans.SyncWork.Demo.Api.Benchmark;
 
 internal static class BenchmarkingSiloHost
 {
-    static TestCluster _testCluster;
+    static TestCluster? _testCluster;
     public static TestCluster GetTestCluster()
     {
         if (_testCluster == null)

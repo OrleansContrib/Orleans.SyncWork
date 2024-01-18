@@ -20,13 +20,13 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     /// <summary>
     /// The logger for the instance.
     /// </summary>
-    protected readonly ILogger _logger;
+    protected readonly ILogger Logger;
     private readonly LimitedConcurrencyLevelTaskScheduler _limitedConcurrencyScheduler;
 
     private SyncWorkStatus _status = SyncWorkStatus.NotStarted;
-    private TResult _result;
-    private Exception _exception;
-    private Task _task;
+    private TResult? _result;
+    private Exception? _exception;
+    private Task? _task;
 
     /// <summary>
     /// Constructs an instance of the <see cref="SyncWorker{TRequest,TResult}"/>.
@@ -35,7 +35,7 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     /// <param name="limitedConcurrencyScheduler">The task scheduler that will be used for the long running work.</param>
     protected SyncWorker(ILogger logger, LimitedConcurrencyLevelTaskScheduler limitedConcurrencyScheduler)
     {
-        _logger = logger;
+        Logger = logger;
         _limitedConcurrencyScheduler = limitedConcurrencyScheduler;
     }
 
@@ -44,11 +44,11 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     {
         if (_task != null)
         {
-            _logger.LogDebug("{Method}: Task already initialized upon call.", nameof(Start));
+            Logger.LogDebug("{Method}: Task already initialized upon call.", nameof(Start));
             return Task.FromResult(false);
         }
 
-        _logger.LogDebug("{Method}: Starting task, set status to running.", nameof(Start));
+        Logger.LogDebug("{Method}: Starting task, set status to running.", nameof(Start));
         _status = SyncWorkStatus.Running;
         _task = CreateTask(request);
 
@@ -60,7 +60,7 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     {
         if (_status == SyncWorkStatus.NotStarted)
         {
-            _logger.LogError("{Method} was in a status of {WorkStatus}", nameof(GetWorkStatus), SyncWorkStatus.NotStarted);
+            Logger.LogError("{Method} was in a status of {WorkStatus}", nameof(GetWorkStatus), SyncWorkStatus.NotStarted);
             DeactivateOnIdle();
             throw new InvalidStateException(_status);
         }
@@ -69,11 +69,11 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     }
 
     /// <inheritdoc />
-    public Task<Exception> GetException()
+    public Task<Exception?> GetException()
     {
         if (_status != SyncWorkStatus.Faulted)
         {
-            _logger.LogError("{Method}: Attempting to retrieve exception from grain when grain not in a faulted state ({_status}).", nameof(GetException), _status);
+            Logger.LogError("{Method}: Attempting to retrieve exception from grain when grain not in a faulted state ({_status}).", nameof(GetException), _status);
             DeactivateOnIdle();
             throw new InvalidStateException(_status, SyncWorkStatus.Faulted);
         }
@@ -85,11 +85,11 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     }
 
     /// <inheritdoc />
-    public Task<TResult> GetResult()
+    public Task<TResult?> GetResult()
     {
         if (_status != SyncWorkStatus.Completed)
         {
-            _logger.LogError("{Method}: Attempting to retrieve result from grain when grain not in a completed state ({Status}).", nameof(GetResult), _status);
+            Logger.LogError("{Method}: Attempting to retrieve result from grain when grain not in a completed state ({Status}).", nameof(GetResult), _status);
             DeactivateOnIdle();
             throw new InvalidStateException(_status, SyncWorkStatus.Completed);
         }
@@ -118,15 +118,15 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
         {
             try
             {
-                _logger.LogInformation("{Method}: Beginning work for task.", nameof(CreateTask));
+                Logger.LogInformation("{Method}: Beginning work for task.", nameof(CreateTask));
                 _result = await PerformWork(request);
                 _exception = default;
                 _status = SyncWorkStatus.Completed;
-                _logger.LogInformation("{Method}: Completed work for task.", nameof(CreateTask));
+                Logger.LogInformation("{Method}: Completed work for task.", nameof(CreateTask));
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "{Method)}: Exception during task.", nameof(CreateTask));
+                Logger.LogError(e, "{Method)}: Exception during task.", nameof(CreateTask));
                 _result = default;
                 _exception = e;
                 _status = SyncWorkStatus.Faulted;

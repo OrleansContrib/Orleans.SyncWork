@@ -1,8 +1,19 @@
 <Project>
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+
+    <!-- 
+    Package versions are centrally managed in the Directory.Packages.props file
+
+    https://devblogs.microsoft.com/nuget/introducing-central-package-management/
+    -->
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Condition="!Exists('packages.config')">
-      <Version>3.4.244</Version>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="Nerdbank.GitVersioning" Condition="!Exists('packages.config')" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
   </ItemGroup>
 </Project>

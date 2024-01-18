@@ -57,10 +57,10 @@ public static class SyncWorkerExtensions
                     await Task.Delay(msDelayPerStatusPoll);
                     break;
                 case SyncWorkStatus.Completed:
-                    return await worker.GetResult();
+                    return (await worker.GetResult())!;
                 case SyncWorkStatus.Faulted:
                     var exception = await worker.GetException();
-                    throw exception;
+                    throw exception!;
                 case SyncWorkStatus.NotStarted:
                     throw new InvalidStateException("This shouldn't happen, but if it does, it probably means the cluster may have died and restarted, and/or a timeout occurred and the grain got reinstantiated without firing off the work.");
                 default:
