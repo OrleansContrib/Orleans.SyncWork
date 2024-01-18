@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Orleans.Hosting;
 using Orleans.SyncWork.ExtensionMethods;
@@ -18,7 +19,9 @@ public class SiloHostBuilderExtensionsTests
             });
 
         var host = builder.Build();
-        var scheduler = (LimitedConcurrencyLevelTaskScheduler)host.Services.GetService(typeof(LimitedConcurrencyLevelTaskScheduler));
+        var scheduler =
+            (LimitedConcurrencyLevelTaskScheduler?)host.Services.GetService(
+                typeof(LimitedConcurrencyLevelTaskScheduler));
 
         scheduler.Should().BeNull("The extension method was not used to register the scheduler");
     }
@@ -36,7 +39,9 @@ public class SiloHostBuilderExtensionsTests
             });
 
         var host = builder.Build();
-        var scheduler = (LimitedConcurrencyLevelTaskScheduler)host.Services.GetService(typeof(LimitedConcurrencyLevelTaskScheduler));
+        var scheduler =
+            (LimitedConcurrencyLevelTaskScheduler?)host.Services.GetService(
+                typeof(LimitedConcurrencyLevelTaskScheduler));
 
         scheduler.Should().NotBeNull("the extension method was to registered the scheduler");
         scheduler?.MaximumConcurrencyLevel.Should().Be(maxSyncWorkConcurrency,

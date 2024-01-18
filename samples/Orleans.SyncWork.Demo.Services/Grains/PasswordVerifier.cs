@@ -30,9 +30,9 @@ public class PasswordVerifier : SyncWorker<PasswordVerifierRequest, PasswordVeri
 public class PasswordVerifierRequest
 {
     [Id(0)]
-    public string Password { get; set; }
+    public string? Password { get; set; }
     [Id(1)]
-    public string PasswordHash { get; set; }
+    public string? PasswordHash { get; set; }
 }
 
 [GenerateSerializer]

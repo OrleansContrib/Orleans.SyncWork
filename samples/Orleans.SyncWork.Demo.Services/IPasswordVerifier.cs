@@ -13,5 +13,5 @@ public interface IPasswordVerifier
     /// <param name="passwordHash">The persisted password hash.</param>
     /// <param name="password">The raw password to hash, then compare.</param>
     /// <returns>True when the password verified successfully, false otherwise.</returns>
-    Task<bool> VerifyPassword(string passwordHash, string password);
+    Task<bool> VerifyPassword(string? passwordHash, string? password);
 }
