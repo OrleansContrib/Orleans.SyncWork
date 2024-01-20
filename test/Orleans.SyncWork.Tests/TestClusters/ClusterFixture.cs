@@ -29,7 +29,8 @@ public class ClusterFixture : IDisposable
         /// <returns>The max concurrency to register to the <see cref="LimitedConcurrencyLevelTaskScheduler"/>.</returns>
         private static int GetMaxConcurrentGrainWork()
         {
-            var concurrentWork = Environment.ProcessorCount - 2;
+            var concurrentWork = Environment.ProcessorCount - 4;
+            
             if (concurrentWork <= 0)
                 concurrentWork = 1;
 
