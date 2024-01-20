@@ -30,7 +30,7 @@ public class ClusterFixture : IDisposable
         private static int GetMaxConcurrentGrainWork()
         {
             var concurrentWork = Environment.ProcessorCount - 4;
-            
+
             if (concurrentWork <= 0)
                 concurrentWork = 1;
 
