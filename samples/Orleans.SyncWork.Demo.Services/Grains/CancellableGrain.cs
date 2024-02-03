@@ -25,8 +25,8 @@ public class CancellableGrain : SyncWorker<SampleCancellationRequest, SampleCanc
 
                 if (request.ThrowOnCancel)
                     throw new OperationCanceledException(grainCancellationToken.CancellationToken);
-                
-                return new SampleCancellationResult() {EndingValue = startingValue};
+
+                return new SampleCancellationResult() { EndingValue = startingValue };
             }
 
             startingValue += 1;
@@ -46,7 +46,7 @@ public class SampleCancellationRequest
     public int StartingValue { get; init; }
     [Id(2)]
     public int EnumerationMax { get; init; } = 1_000;
-    [Id(3)] 
+    [Id(3)]
     public bool ThrowOnCancel { get; init; }
 }
 

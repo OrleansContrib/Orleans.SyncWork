@@ -310,13 +310,13 @@ public class SyncWorkerTests : ClusterTestBase
             await Task.Delay(100);
             status = await grain.GetWorkStatus();
         }
-        
+
         var result = await grain.GetResult();
 
         result!.EndingValue.Should().BeGreaterThan(1);
         result!.EndingValue.Should().BeLessThan(1_000);
     }
-    
+
     [Fact]
     public async Task WhenGrainHasCancellationSupport_CanThrow()
     {
