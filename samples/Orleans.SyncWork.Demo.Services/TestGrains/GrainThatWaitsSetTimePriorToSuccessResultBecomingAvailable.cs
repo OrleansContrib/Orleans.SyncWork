@@ -29,7 +29,8 @@ public class GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable : SyncWo
         LimitedConcurrencyLevelTaskScheduler limitedConcurrencyScheduler
     ) : base(logger, limitedConcurrencyScheduler) { }
 
-    protected override async Task<TestDelaySuccessResult> PerformWork(TestDelaySuccessRequest request)
+    protected override async Task<TestDelaySuccessResult> PerformWork(
+        TestDelaySuccessRequest request, GrainCancellationToken grainCancellationToken)
     {
         await Task.Delay(request.MsDelayPriorToResult);
 

@@ -15,7 +15,8 @@ public class PasswordVerifier : SyncWorker<PasswordVerifierRequest, PasswordVeri
         _passwordVerifier = passwordVerifier;
     }
 
-    protected override async Task<PasswordVerifierResult> PerformWork(PasswordVerifierRequest request)
+    protected override async Task<PasswordVerifierResult> PerformWork(
+        PasswordVerifierRequest request, GrainCancellationToken grainCancellationToken)
     {
         var verifyResult = await _passwordVerifier.VerifyPassword(request.PasswordHash, request.Password);
 

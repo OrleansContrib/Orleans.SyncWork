@@ -18,6 +18,20 @@ public interface ISyncWorker<in TRequest, TResult> : IGrainWithGuidKey
     /// <returns>true if work is started, false if it was already started.</returns>
     Task<bool> Start(TRequest request);
     /// <summary>
+    /// <para>
+    /// Start long running work with the provided parameter.
+    /// </para>
+    /// <para>
+    /// Supports cancellation, but any cancellation logic is up to the grain implementation.  It could
+    /// conceivably return a result at the point of cancellation, or throw, depending on what makes sense for
+    /// the particular grain.
+    /// </para>
+    /// </summary>
+    /// <param name="request">The parameter containing all necessary information to start the workload.</param>
+    /// <param name="grainCancellationToken">The token for cancelling tasks.</param>
+    /// <returns>true if work is started, false if it was already started.</returns>
+    Task<bool> Start(TRequest request, GrainCancellationToken grainCancellationToken);
+    /// <summary>
     /// Gets the long running work status.
     /// </summary>
     /// <returns>The status of the long running work.</returns>

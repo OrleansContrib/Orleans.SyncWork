@@ -29,7 +29,8 @@ public class GrainThatWaitsSetTimePriorToExceptionResultBecomingAvailable : Sync
         LimitedConcurrencyLevelTaskScheduler limitedConcurrencyScheduler
     ) : base(logger, limitedConcurrencyScheduler) { }
 
-    protected override async Task<TestDelayExceptionResult> PerformWork(TestDelayExceptionRequest request)
+    protected override async Task<TestDelayExceptionResult> PerformWork(
+        TestDelayExceptionRequest request, GrainCancellationToken grainCancellationToken)
     {
         Logger.LogInformation($"Waiting {request.MsDelayPriorToResult} on {this.IdentityString}");
         await Task.Delay(request.MsDelayPriorToResult);

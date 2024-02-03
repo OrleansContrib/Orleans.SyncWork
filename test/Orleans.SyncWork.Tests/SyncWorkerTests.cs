@@ -6,6 +6,7 @@ using FluentAssertions;
 using Orleans.SyncWork.Demo.Services;
 using Orleans.SyncWork.Demo.Services.Grains;
 using Orleans.SyncWork.Demo.Services.TestGrains;
+using Orleans.SyncWork.Enums;
 using Orleans.SyncWork.Exceptions;
 using Orleans.SyncWork.Tests.TestClusters;
 using Orleans.SyncWork.Tests.XUnitTraits;
@@ -18,6 +19,8 @@ namespace Orleans.SyncWork.Tests;
 /// </summary>
 public class SyncWorkerTests : ClusterTestBase
 {
+    private readonly GrainCancellationTokenSource _cancellationTokenSource = new();
+
     public SyncWorkerTests(ClusterFixture fixture) : base(fixture) { }
 
     [Theory, Trait(Traits.Category, Traits.Categories.LongRunning)]
@@ -35,7 +38,9 @@ public class SyncWorkerTests : ClusterTestBase
         };
         for (var i = 0; i < totalInvokes; i++)
         {
-            var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
+            var grain =
+                Cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(
+                    Guid.NewGuid());
             tasks.Add(grain.StartWorkAndPollUntilResult(request));
         }
 
@@ -62,7 +67,9 @@ public class SyncWorkerTests : ClusterTestBase
         };
         for (var i = 0; i < 10_000; i++)
         {
-            var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
+            var grain =
+                Cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(
+                    Guid.NewGuid());
             tasks.Add(grain.StartWorkAndPollUntilResult(request));
         }
 
@@ -82,7 +89,8 @@ public class SyncWorkerTests : ClusterTestBase
     [Fact]
     public async Task WhenGrainNotStarted_ShouldThrowOnAttemptingToRetrieveStatus()
     {
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>>(Guid.NewGuid());
+        var grain =
+            Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>>(Guid.NewGuid());
 
         var action = new Func<Task>(async () => await grain.GetWorkStatus());
 
@@ -93,12 +101,13 @@ public class SyncWorkerTests : ClusterTestBase
     public async Task WhenGrainStartedButWorkNotCompleted_ShouldReturnStatusRunningOnGetStatus()
     {
         var delay = 2500;
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>>(Guid.NewGuid());
+        var grain =
+            Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>>(Guid.NewGuid());
         await grain.Start(new TestDelaySuccessRequest()
         {
             Started = DateTime.UtcNow,
             MsDelayPriorToResult = delay
-        });
+        }, _cancellationTokenSource.Token);
 
         var status = await grain.GetWorkStatus();
 
@@ -115,12 +124,13 @@ public class SyncWorkerTests : ClusterTestBase
     public async Task WhenGrainStartedButWorkNotCompleted_ShouldThrowWhenAttemptingToRetrieveResults()
     {
         var delay = 5000;
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>>(Guid.NewGuid());
+        var grain =
+            Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>>(Guid.NewGuid());
         await grain.Start(new TestDelaySuccessRequest()
         {
             Started = DateTime.UtcNow,
             MsDelayPriorToResult = delay
-        });
+        }, _cancellationTokenSource.Token);
 
         var action = new Func<Task>(async () => await grain.GetResult());
 
@@ -131,11 +141,13 @@ public class SyncWorkerTests : ClusterTestBase
     public async Task WhenGrainExceptionStartedButWorkNotCompleted_ShouldReturnStatusRunningOnGetStatus()
     {
         var delay = 2500;
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelayExceptionRequest, TestDelayExceptionResult>>(Guid.NewGuid());
+        var grain =
+            Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelayExceptionRequest, TestDelayExceptionResult>>(
+                Guid.NewGuid());
         await grain.Start(new TestDelayExceptionRequest()
         {
             MsDelayPriorToResult = delay
-        });
+        }, _cancellationTokenSource.Token);
 
         var status = await grain.GetWorkStatus();
 
@@ -152,11 +164,13 @@ public class SyncWorkerTests : ClusterTestBase
     public async Task WhenExceptionGrainStartedButWorkNotCompleted_ShouldThrowWhenAttemptingToRetrieveResults()
     {
         var delay = 5000;
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelayExceptionRequest, TestDelayExceptionResult>>(Guid.NewGuid());
+        var grain =
+            Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelayExceptionRequest, TestDelayExceptionResult>>(
+                Guid.NewGuid());
         await grain.Start(new TestDelayExceptionRequest()
         {
             MsDelayPriorToResult = delay
-        });
+        }, _cancellationTokenSource.Token);
 
         var action = new Func<Task>(async () => await grain.GetException());
 
@@ -174,7 +188,8 @@ public class SyncWorkerTests : ClusterTestBase
             MsDelayPriorToResult = 10
         };
 
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>>(Guid.NewGuid());
+        var grain =
+            Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>>(Guid.NewGuid());
         var result = await grain.StartWorkAndPollUntilResult(request);
 
         result.Started.Should().Be(started);
@@ -191,8 +206,9 @@ public class SyncWorkerTests : ClusterTestBase
             MsDelayPriorToResult = 10
         };
 
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>>(Guid.NewGuid());
-        await grain.Start(request);
+        var grain =
+            Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>>(Guid.NewGuid());
+        await grain.Start(request, _cancellationTokenSource.Token);
 
         var status = await grain.GetWorkStatus();
         while (status == Enums.SyncWorkStatus.Running)
@@ -214,7 +230,9 @@ public class SyncWorkerTests : ClusterTestBase
             MsDelayPriorToResult = 10
         };
 
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelayExceptionRequest, TestDelayExceptionResult>>(Guid.NewGuid());
+        var grain =
+            Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelayExceptionRequest, TestDelayExceptionResult>>(
+                Guid.NewGuid());
         var action = new Func<Task>(async () => await grain.StartWorkAndPollUntilResult(request));
 
         await action.Should().ThrowAsync<TestGrainException>();
@@ -228,8 +246,10 @@ public class SyncWorkerTests : ClusterTestBase
             MsDelayPriorToResult = 10
         };
 
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelayExceptionRequest, TestDelayExceptionResult>>(Guid.NewGuid());
-        await grain.Start(request);
+        var grain =
+            Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelayExceptionRequest, TestDelayExceptionResult>>(
+                Guid.NewGuid());
+        await grain.Start(request, _cancellationTokenSource.Token);
 
         var status = await grain.GetWorkStatus();
         while (status == Enums.SyncWorkStatus.Running)
@@ -241,5 +261,93 @@ public class SyncWorkerTests : ClusterTestBase
         var action = new Func<Task>(() => grain.GetResult());
 
         await action.Should().ThrowAsync<InvalidStateException>();
+    }
+
+    [Fact]
+    public async Task WhenGrainHasCancellationSupport_ShouldRunThroughFullGrainLogicIfNoCancellation()
+    {
+        var request = new SampleCancellationRequest
+        {
+            StartingValue = 1,
+            EnumerationDelay = TimeSpan.FromMilliseconds(10),
+            EnumerationMax = 1_000
+        };
+
+        var grain =
+            Cluster.GrainFactory.GetGrain<ISyncWorker<SampleCancellationRequest, SampleCancellationResult>>(
+                Guid.NewGuid());
+
+        var result = await grain.StartWorkAndPollUntilResult(request);
+
+        result.EndingValue.Should().BeGreaterOrEqualTo(1000);
+    }
+
+    [Fact]
+    public async Task WhenGrainHasCancellationSupport_CanReturnResultAtCancellation()
+    {
+        var request = new SampleCancellationRequest
+        {
+            StartingValue = 1,
+            EnumerationDelay = TimeSpan.FromMilliseconds(10),
+            EnumerationMax = 1_000,
+            ThrowOnCancel = false,
+        };
+
+        var grain =
+            Cluster.GrainFactory.GetGrain<ISyncWorker<SampleCancellationRequest, SampleCancellationResult>>(
+                Guid.NewGuid());
+
+        var cancellationToken = _cancellationTokenSource.Token;
+
+        _ = await grain.Start(request, cancellationToken);
+        await Task.Delay(TimeSpan.FromSeconds(1));
+        await _cancellationTokenSource.Cancel();
+
+        // Since sending the cancellation is not instantaneous, wait until the work status has changed from running
+        var status = await grain.GetWorkStatus();
+        while (status == Enums.SyncWorkStatus.Running)
+        {
+            await Task.Delay(100);
+            status = await grain.GetWorkStatus();
+        }
+        
+        var result = await grain.GetResult();
+
+        result!.EndingValue.Should().BeGreaterThan(1);
+        result!.EndingValue.Should().BeLessThan(1_000);
+    }
+    
+    [Fact]
+    public async Task WhenGrainHasCancellationSupport_CanThrow()
+    {
+        var request = new SampleCancellationRequest
+        {
+            StartingValue = 1,
+            EnumerationDelay = TimeSpan.FromMilliseconds(10),
+            EnumerationMax = 1_000,
+            ThrowOnCancel = true,
+        };
+
+        var grain =
+            Cluster.GrainFactory.GetGrain<ISyncWorker<SampleCancellationRequest, SampleCancellationResult>>(
+                Guid.NewGuid());
+
+        var cancellationToken = _cancellationTokenSource.Token;
+
+        _ = await grain.Start(request, cancellationToken);
+        await Task.Delay(TimeSpan.FromSeconds(1));
+        await _cancellationTokenSource.Cancel();
+
+        // Since sending the cancellation is not instantaneous, wait until the work status has changed from running
+        var status = await grain.GetWorkStatus();
+        while (status == Enums.SyncWorkStatus.Running)
+        {
+            await Task.Delay(100);
+            status = await grain.GetWorkStatus();
+        }
+
+        var result = await grain.GetException();
+
+        result.Should().BeOfType<OperationCanceledException>();
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Orleans.SyncWork.Enums;
@@ -40,7 +39,15 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     }
 
     /// <inheritdoc />
-    public Task<bool> Start(TRequest request)
+    public async Task<bool> Start(TRequest request)
+    {
+        var token = new GrainCancellationTokenSource().Token;
+
+        return await Start(request, token);
+    }
+
+    /// <inheritdoc />
+    public Task<bool> Start(TRequest request, GrainCancellationToken grainCancellationToken)
     {
         if (_task != null)
         {
@@ -50,7 +57,7 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
 
         Logger.LogDebug("{Method}: Starting task, set status to running.", nameof(Start));
         _status = SyncWorkStatus.Running;
-        _task = CreateTask(request);
+        _task = CreateTask(request, grainCancellationToken);
 
         return Task.FromResult(true);
     }
@@ -104,22 +111,24 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     /// The method that actually performs the long running work.
     /// </summary>
     /// <param name="request">The request/parameters used for the execution of the method.</param>
-    /// <returns></returns>
-    protected abstract Task<TResult> PerformWork(TRequest request);
+    /// <param name="grainCancellationToken">The cancellation token.</param>
+    /// <returns>A result once available.</returns>
+    protected abstract Task<TResult> PerformWork(TRequest request, GrainCancellationToken grainCancellationToken);
 
     /// <summary>
     /// The task creation that fires off the long running work to the <see cref="LimitedConcurrencyLevelTaskScheduler"/>.
     /// </summary>
     /// <param name="request">The request to use for the invoke of the long running work.</param>
+    /// <param name="grainCancellationToken">The cancellation token.</param>
     /// <returns>a <see cref="Task"/> representing the fact that the work has been dispatched.</returns>
-    private Task CreateTask(TRequest request)
+    private Task CreateTask(TRequest request, GrainCancellationToken grainCancellationToken)
     {
         return Task.Factory.StartNew(async () =>
         {
             try
             {
                 Logger.LogInformation("{Method}: Beginning work for task.", nameof(CreateTask));
-                _result = await PerformWork(request);
+                _result = await PerformWork(request, grainCancellationToken);
                 _exception = default;
                 _status = SyncWorkStatus.Completed;
                 Logger.LogInformation("{Method}: Completed work for task.", nameof(CreateTask));
@@ -131,6 +140,6 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
                 _exception = e;
                 _status = SyncWorkStatus.Faulted;
             }
-        }, CancellationToken.None, TaskCreationOptions.LongRunning, _limitedConcurrencyScheduler);
+        }, grainCancellationToken.CancellationToken, TaskCreationOptions.LongRunning, _limitedConcurrencyScheduler);
     }
 }
