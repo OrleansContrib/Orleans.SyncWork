@@ -4,25 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Orleans.SyncWork.Demo.Services.TestGrains;
 
-[GenerateSerializer]
-public class TestDelaySuccessRequest
-{
-    [Id(0)]
-    public DateTime Started { get; set; }
-    [Id(1)]
-    public int MsDelayPriorToResult { get; set; }
-}
-
-[GenerateSerializer]
-public class TestDelaySuccessResult
-{
-    [Id(0)]
-    public DateTime Started { get; set; }
-    [Id(1)]
-    public DateTime Ended { get; set; }
-}
-
-public class GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable : SyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>
+public class GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable : SyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>, IGrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable
 {
     public GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable(
         ILogger<GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable> logger,
@@ -39,4 +21,22 @@ public class GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable : SyncWo
             Ended = DateTime.UtcNow
         };
     }
+}
+
+[GenerateSerializer]
+public class TestDelaySuccessRequest
+{
+    [Id(0)]
+    public DateTime Started { get; set; }
+    [Id(1)]
+    public int MsDelayPriorToResult { get; set; }
+}
+
+[GenerateSerializer]
+public class TestDelaySuccessResult
+{
+    [Id(0)]
+    public DateTime Started { get; set; }
+    [Id(1)]
+    public DateTime Ended { get; set; }
 }

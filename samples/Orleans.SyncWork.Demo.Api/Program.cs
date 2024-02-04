@@ -41,7 +41,7 @@ app
     {
         try
         {
-            var passwordVerifyGrain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
+            var passwordVerifyGrain = grainFactory.GetGrain<IPasswordVerifierGrain>(Guid.NewGuid());
             return await passwordVerifyGrain.StartWorkAndPollUntilResult(request);
         }
         catch (Exception e)
@@ -59,7 +59,7 @@ app
 
         for (var i = 0; i < 10_000; i++)
         {
-            var passwordVerifyGrain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
+            var passwordVerifyGrain = grainFactory.GetGrain<IPasswordVerifierGrain>(Guid.NewGuid());
             tasks.Add(passwordVerifyGrain.StartWorkAndPollUntilResult(request));
         }
 

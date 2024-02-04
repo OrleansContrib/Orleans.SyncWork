@@ -35,7 +35,7 @@ public class SyncWorkerTests : ClusterTestBase
         };
         for (var i = 0; i < totalInvokes; i++)
         {
-            var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
+            var grain = Cluster.GrainFactory.GetGrain<IPasswordVerifierGrain>(Guid.NewGuid());
             tasks.Add(grain.StartWorkAndPollUntilResult(request));
         }
 
@@ -62,7 +62,7 @@ public class SyncWorkerTests : ClusterTestBase
         };
         for (var i = 0; i < 10_000; i++)
         {
-            var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
+            var grain = Cluster.GrainFactory.GetGrain<IPasswordVerifierGrain>(Guid.NewGuid());
             tasks.Add(grain.StartWorkAndPollUntilResult(request));
         }
 
@@ -82,7 +82,7 @@ public class SyncWorkerTests : ClusterTestBase
     [Fact]
     public async Task WhenGrainNotStarted_ShouldThrowOnAttemptingToRetrieveStatus()
     {
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>>(Guid.NewGuid());
+        var grain = Cluster.GrainFactory.GetGrain<IGrainThatWaitsSetTimePriorToExceptionResultBecomingAvailable>(Guid.NewGuid());
 
         var action = new Func<Task>(async () => await grain.GetWorkStatus());
 
@@ -93,7 +93,7 @@ public class SyncWorkerTests : ClusterTestBase
     public async Task WhenGrainStartedButWorkNotCompleted_ShouldReturnStatusRunningOnGetStatus()
     {
         var delay = 2500;
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>>(Guid.NewGuid());
+        var grain = Cluster.GrainFactory.GetGrain<IGrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable>(Guid.NewGuid());
         await grain.Start(new TestDelaySuccessRequest()
         {
             Started = DateTime.UtcNow,
@@ -115,7 +115,7 @@ public class SyncWorkerTests : ClusterTestBase
     public async Task WhenGrainStartedButWorkNotCompleted_ShouldThrowWhenAttemptingToRetrieveResults()
     {
         var delay = 5000;
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>>(Guid.NewGuid());
+        var grain = Cluster.GrainFactory.GetGrain<IGrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable>(Guid.NewGuid());
         await grain.Start(new TestDelaySuccessRequest()
         {
             Started = DateTime.UtcNow,
@@ -131,7 +131,7 @@ public class SyncWorkerTests : ClusterTestBase
     public async Task WhenGrainExceptionStartedButWorkNotCompleted_ShouldReturnStatusRunningOnGetStatus()
     {
         var delay = 2500;
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelayExceptionRequest, TestDelayExceptionResult>>(Guid.NewGuid());
+        var grain = Cluster.GrainFactory.GetGrain<IGrainThatWaitsSetTimePriorToExceptionResultBecomingAvailable>(Guid.NewGuid());
         await grain.Start(new TestDelayExceptionRequest()
         {
             MsDelayPriorToResult = delay
@@ -152,7 +152,7 @@ public class SyncWorkerTests : ClusterTestBase
     public async Task WhenExceptionGrainStartedButWorkNotCompleted_ShouldThrowWhenAttemptingToRetrieveResults()
     {
         var delay = 5000;
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelayExceptionRequest, TestDelayExceptionResult>>(Guid.NewGuid());
+        var grain = Cluster.GrainFactory.GetGrain<IGrainThatWaitsSetTimePriorToExceptionResultBecomingAvailable>(Guid.NewGuid());
         await grain.Start(new TestDelayExceptionRequest()
         {
             MsDelayPriorToResult = delay
@@ -174,7 +174,7 @@ public class SyncWorkerTests : ClusterTestBase
             MsDelayPriorToResult = 10
         };
 
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>>(Guid.NewGuid());
+        var grain = Cluster.GrainFactory.GetGrain<IGrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable>(Guid.NewGuid());
         var result = await grain.StartWorkAndPollUntilResult(request);
 
         result.Started.Should().Be(started);
@@ -191,7 +191,7 @@ public class SyncWorkerTests : ClusterTestBase
             MsDelayPriorToResult = 10
         };
 
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>>(Guid.NewGuid());
+        var grain = Cluster.GrainFactory.GetGrain<IGrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable>(Guid.NewGuid());
         await grain.Start(request);
 
         var status = await grain.GetWorkStatus();
@@ -214,7 +214,7 @@ public class SyncWorkerTests : ClusterTestBase
             MsDelayPriorToResult = 10
         };
 
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelayExceptionRequest, TestDelayExceptionResult>>(Guid.NewGuid());
+        var grain = Cluster.GrainFactory.GetGrain<IGrainThatWaitsSetTimePriorToExceptionResultBecomingAvailable>(Guid.NewGuid());
         var action = new Func<Task>(async () => await grain.StartWorkAndPollUntilResult(request));
 
         await action.Should().ThrowAsync<TestGrainException>();
@@ -228,7 +228,7 @@ public class SyncWorkerTests : ClusterTestBase
             MsDelayPriorToResult = 10
         };
 
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<TestDelayExceptionRequest, TestDelayExceptionResult>>(Guid.NewGuid());
+        var grain = Cluster.GrainFactory.GetGrain<IGrainThatWaitsSetTimePriorToExceptionResultBecomingAvailable>(Guid.NewGuid());
         await grain.Start(request);
 
         var status = await grain.GetWorkStatus();
