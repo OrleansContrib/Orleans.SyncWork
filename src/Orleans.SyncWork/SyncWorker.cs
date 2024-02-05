@@ -56,17 +56,7 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     }
 
     /// <inheritdoc />
-    public Task<SyncWorkStatus> GetWorkStatus()
-    {
-        if (_status == SyncWorkStatus.NotStarted)
-        {
-            Logger.LogError("{Method} was in a status of {WorkStatus}", nameof(GetWorkStatus), SyncWorkStatus.NotStarted);
-            DeactivateOnIdle();
-            throw new InvalidStateException(_status);
-        }
-
-        return Task.FromResult(_status);
-    }
+    public Task<SyncWorkStatus> GetWorkStatus() => Task.FromResult(_status);
 
     /// <inheritdoc />
     public Task<Exception?> GetException()
