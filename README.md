@@ -22,6 +22,9 @@ The project was built primarily with .net3 in mind, though the varying major ver
 
 There are several projects within this repository, all with the idea of demonstrating and/or testing the claim that the NuGet package https://www.nuget.org/packages/Orleans.SyncWork/ does what it is claimed it does.
 
+Note that this project's major revision is kept in-line with the Orleans major version, so the project
+does not necessarily abide by [SemVer](https://semver.org/), but we try as much as possible to do so. If breaking changes are introduced, descriptions of the breaking change and how to implement against it should be provided in release notes.
+
 The projects in this repository include:
 
 - [Orleans.SyncWork](#orleanssyncwork)
@@ -59,10 +62,13 @@ This package introduces a few "requirements" against Orleans:
 
 #### Usage
 
-Extend the base class to implement a long running grain.
+Create an interface for the grain, which implements `ISyncWorker<TRequest, TResult>`, as well as one of the `IGrainWith...Key` interfaces. Then create a new class that extends the `SyncWorker<TRequest, TResult>` abstract class, and implements the new interface that was introduced:
 
 ```cs
-public class PasswordVerifier : SyncWorker<PasswordVerifierRequest, PasswordVerifierResult>, IGrain
+public interface IPasswordVerifierGrain
+    : ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>, IGrainWithGuidKey;
+
+public class PasswordVerifierGrain : SyncWorker<PasswordVerifierRequest, PasswordVerifierResult>, IPasswordVerifierGrain
 {
     private readonly IPasswordVerifier _passwordVerifier;
 
@@ -106,7 +112,7 @@ var request = new PasswordVerifierRequest()
     Password = "my super neat password that's totally secure because it's super long",
     PasswordHash = "$2a$11$vBzJ4Ewx28C127AG5x3kT.QCCS8ai0l4JLX3VOX3MzHRkF4/A5twy"
 }
-var passwordVerifyGrain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
+var passwordVerifyGrain = grainFactory.GetGrain<IPasswordVerifierGrain>(Guid.NewGuid());
 var result = await passwordVerifyGrain.StartWorkAndPollUntilResult(request);
 ```
 
@@ -189,7 +195,7 @@ public class Benchy
         var tasks = new List<Task>();
         for (var i = 0; i < TotalNumberPerBenchmark; i++)
         {
-            var grain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
+            var grain = grainFactory.GetGrain<IPasswordVerifierGrain>(Guid.NewGuid());
             tasks.Add(grain.StartWorkAndPollUntilResult(_request));
         }
 

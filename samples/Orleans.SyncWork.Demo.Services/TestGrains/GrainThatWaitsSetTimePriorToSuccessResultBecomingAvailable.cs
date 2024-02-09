@@ -4,6 +4,26 @@ using Microsoft.Extensions.Logging;
 
 namespace Orleans.SyncWork.Demo.Services.TestGrains;
 
+public class GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable :
+    SyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>,
+    IGrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable
+{
+    public GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable(
+        ILogger<GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable> logger,
+        LimitedConcurrencyLevelTaskScheduler limitedConcurrencyScheduler
+    ) : base(logger, limitedConcurrencyScheduler)
+    {
+    }
+
+    protected override async Task<TestDelaySuccessResult> PerformWork(TestDelaySuccessRequest request,
+        GrainCancellationToken grainCancellationToken)
+    {
+        await Task.Delay(request.MsDelayPriorToResult);
+
+        return new TestDelaySuccessResult() {Started = request.Started, Ended = DateTime.UtcNow};
+    }
+}
+
 [GenerateSerializer]
 public class TestDelaySuccessRequest
 {
@@ -20,24 +40,4 @@ public class TestDelaySuccessResult
     public DateTime Started { get; set; }
     [Id(1)]
     public DateTime Ended { get; set; }
-}
-
-public class GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable : SyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>
-{
-    public GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable(
-        ILogger<GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable> logger,
-        LimitedConcurrencyLevelTaskScheduler limitedConcurrencyScheduler
-    ) : base(logger, limitedConcurrencyScheduler) { }
-
-    protected override async Task<TestDelaySuccessResult> PerformWork(
-        TestDelaySuccessRequest request, GrainCancellationToken grainCancellationToken)
-    {
-        await Task.Delay(request.MsDelayPriorToResult);
-
-        return new TestDelaySuccessResult()
-        {
-            Started = request.Started,
-            Ended = DateTime.UtcNow
-        };
-    }
 }

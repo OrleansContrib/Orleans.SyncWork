@@ -9,7 +9,7 @@ namespace Orleans.SyncWork;
 /// </summary>
 /// <typeparam name="TRequest">The type of request to dispatch.</typeparam>
 /// <typeparam name="TResult">The type of result to receive.</typeparam>
-public interface ISyncWorker<in TRequest, TResult> : IGrainWithGuidKey
+public interface ISyncWorker<in TRequest, TResult> : IGrain
 {
     /// <summary>
     /// Start long running work with the provided parameter.

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Orleans.SyncWork.Demo.Services.Grains;
 
-public class CancellableGrain : SyncWorker<SampleCancellationRequest, SampleCancellationResult>
+public class CancellableGrain : SyncWorker<SampleCancellationRequest, SampleCancellationResult>, ICancellableGrain
 {
     public CancellableGrain(
         ILogger<CancellableGrain> logger,

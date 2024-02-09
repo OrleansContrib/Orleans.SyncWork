@@ -3,12 +3,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Orleans.SyncWork.Demo.Services.Grains;
 
-public class PasswordVerifier : SyncWorker<PasswordVerifierRequest, PasswordVerifierResult>
+public class PasswordVerifierGrain : SyncWorker<PasswordVerifierRequest, PasswordVerifierResult>, IPasswordVerifierGrain
 {
     private readonly IPasswordVerifier _passwordVerifier;
 
-    public PasswordVerifier(
-        ILogger<PasswordVerifier> logger,
+    public PasswordVerifierGrain(
+        ILogger<PasswordVerifierGrain> logger,
         LimitedConcurrencyLevelTaskScheduler limitedConcurrencyLevelTaskScheduler,
         IPasswordVerifier passwordVerifier) : base(logger, limitedConcurrencyLevelTaskScheduler)
     {

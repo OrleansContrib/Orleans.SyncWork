@@ -4,6 +4,27 @@ using Microsoft.Extensions.Logging;
 
 namespace Orleans.SyncWork.Demo.Services.TestGrains;
 
+public class GrainThatWaitsSetTimePriorToExceptionResultBecomingAvailable :
+    SyncWorker<TestDelayExceptionRequest, TestDelayExceptionResult>,
+    IGrainThatWaitsSetTimePriorToExceptionResultBecomingAvailable
+{
+    public GrainThatWaitsSetTimePriorToExceptionResultBecomingAvailable(
+        ILogger<GrainThatWaitsSetTimePriorToExceptionResultBecomingAvailable> logger,
+        LimitedConcurrencyLevelTaskScheduler limitedConcurrencyScheduler
+    ) : base(logger, limitedConcurrencyScheduler)
+    {
+    }
+
+    protected override async Task<TestDelayExceptionResult> PerformWork(TestDelayExceptionRequest request,
+        GrainCancellationToken grainCancellationToken)
+    {
+        Logger.LogInformation($"Waiting {request.MsDelayPriorToResult} on {this.IdentityString}");
+        await Task.Delay(request.MsDelayPriorToResult);
+
+        throw new TestGrainException("This is an expected exception, I'm testing for it!");
+    }
+}
+
 [GenerateSerializer]
 public class TestGrainException : Exception
 {
@@ -18,23 +39,4 @@ public class TestDelayExceptionRequest
 }
 
 [GenerateSerializer]
-public class TestDelayExceptionResult
-{
-}
-
-public class GrainThatWaitsSetTimePriorToExceptionResultBecomingAvailable : SyncWorker<TestDelayExceptionRequest, TestDelayExceptionResult>
-{
-    public GrainThatWaitsSetTimePriorToExceptionResultBecomingAvailable(
-        ILogger<GrainThatWaitsSetTimePriorToExceptionResultBecomingAvailable> logger,
-        LimitedConcurrencyLevelTaskScheduler limitedConcurrencyScheduler
-    ) : base(logger, limitedConcurrencyScheduler) { }
-
-    protected override async Task<TestDelayExceptionResult> PerformWork(
-        TestDelayExceptionRequest request, GrainCancellationToken grainCancellationToken)
-    {
-        Logger.LogInformation($"Waiting {request.MsDelayPriorToResult} on {this.IdentityString}");
-        await Task.Delay(request.MsDelayPriorToResult);
-
-        throw new TestGrainException("This is an expected exception, I'm testing for it!");
-    }
-}
+public class TestDelayExceptionResult;
