@@ -22,7 +22,7 @@ public class SyncWorkerExtensionMethodTests : ClusterTestBase
     [Fact]
     public async Task WhenGivenValidPasswordAndHash_ShouldVerify()
     {
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
+        var grain = Cluster.GrainFactory.GetGrain<IPasswordVerifierGrain>(Guid.NewGuid());
 
         var request = new PasswordVerifierRequest
         {
@@ -38,7 +38,7 @@ public class SyncWorkerExtensionMethodTests : ClusterTestBase
     [Fact]
     public async Task WhenGivenInvalidPasswordAndHash_ShouldNotVerify()
     {
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
+        var grain = Cluster.GrainFactory.GetGrain<IPasswordVerifierGrain>(Guid.NewGuid());
 
         var request = new PasswordVerifierRequest
         {
@@ -54,7 +54,7 @@ public class SyncWorkerExtensionMethodTests : ClusterTestBase
     [Fact]
     public async Task WhenGivenBadHashFormat_ShouldException()
     {
-        var grain = Cluster.GrainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
+        var grain = Cluster.GrainFactory.GetGrain<IPasswordVerifierGrain>(Guid.NewGuid());
 
         var request = new PasswordVerifierRequest
         {

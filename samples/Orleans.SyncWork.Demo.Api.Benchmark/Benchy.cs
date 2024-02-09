@@ -59,7 +59,7 @@ public class Benchy
         var tasks = new List<Task>();
         for (var i = 0; i < TotalNumberPerBenchmark; i++)
         {
-            var grain = grainFactory.GetGrain<ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>>(Guid.NewGuid());
+            var grain = grainFactory.GetGrain<IPasswordVerifierGrain>(Guid.NewGuid());
             tasks.Add(grain.StartWorkAndPollUntilResult(_request));
         }
 
