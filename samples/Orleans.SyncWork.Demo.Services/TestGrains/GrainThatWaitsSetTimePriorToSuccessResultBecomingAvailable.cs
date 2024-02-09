@@ -20,7 +20,7 @@ public class GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable :
     {
         await Task.Delay(request.MsDelayPriorToResult);
 
-        return new TestDelaySuccessResult() {Started = request.Started, Ended = DateTime.UtcNow};
+        return new TestDelaySuccessResult() { Started = request.Started, Ended = DateTime.UtcNow };
     }
 }
 
