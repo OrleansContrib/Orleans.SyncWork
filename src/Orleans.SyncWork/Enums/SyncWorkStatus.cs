@@ -20,5 +20,5 @@ public enum SyncWorkStatus
     /// <summary>
     /// The work has been completed, though an exception was thrown.
     /// </summary>
-    Faulted
+    Faulted,
 }

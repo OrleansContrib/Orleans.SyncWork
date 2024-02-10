@@ -4,22 +4,23 @@ using Microsoft.Extensions.Logging;
 
 namespace Orleans.SyncWork.Demo.Services.TestGrains;
 
-public class GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable : SyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>, IGrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable
+public class GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable :
+    SyncWorker<TestDelaySuccessRequest, TestDelaySuccessResult>,
+    IGrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable
 {
     public GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable(
         ILogger<GrainThatWaitsSetTimePriorToSuccessResultBecomingAvailable> logger,
         LimitedConcurrencyLevelTaskScheduler limitedConcurrencyScheduler
-    ) : base(logger, limitedConcurrencyScheduler) { }
+    ) : base(logger, limitedConcurrencyScheduler)
+    {
+    }
 
-    protected override async Task<TestDelaySuccessResult> PerformWork(TestDelaySuccessRequest request)
+    protected override async Task<TestDelaySuccessResult> PerformWork(TestDelaySuccessRequest request,
+        GrainCancellationToken grainCancellationToken)
     {
         await Task.Delay(request.MsDelayPriorToResult);
 
-        return new TestDelaySuccessResult()
-        {
-            Started = request.Started,
-            Ended = DateTime.UtcNow
-        };
+        return new TestDelaySuccessResult() { Started = request.Started, Ended = DateTime.UtcNow };
     }
 }
 

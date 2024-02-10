@@ -6,6 +6,7 @@ using FluentAssertions;
 using Orleans.SyncWork.Demo.Services;
 using Orleans.SyncWork.Demo.Services.Grains;
 using Orleans.SyncWork.Demo.Services.TestGrains;
+using Orleans.SyncWork.Enums;
 using Orleans.SyncWork.Exceptions;
 using Orleans.SyncWork.Tests.TestClusters;
 using Orleans.SyncWork.Tests.XUnitTraits;
@@ -18,6 +19,8 @@ namespace Orleans.SyncWork.Tests;
 /// </summary>
 public class SyncWorkerTests : ClusterTestBase
 {
+    private readonly GrainCancellationTokenSource _cancellationTokenSource = new();
+
     public SyncWorkerTests(ClusterFixture fixture) : base(fixture) { }
 
     [Theory, Trait(Traits.Category, Traits.Categories.LongRunning)]
@@ -89,7 +92,7 @@ public class SyncWorkerTests : ClusterTestBase
         {
             Started = DateTime.UtcNow,
             MsDelayPriorToResult = delay
-        });
+        }, _cancellationTokenSource.Token);
 
         var status = await grain.GetWorkStatus();
 
@@ -111,7 +114,7 @@ public class SyncWorkerTests : ClusterTestBase
         {
             Started = DateTime.UtcNow,
             MsDelayPriorToResult = delay
-        });
+        }, _cancellationTokenSource.Token);
 
         var action = new Func<Task>(async () => await grain.GetResult());
 
@@ -126,7 +129,7 @@ public class SyncWorkerTests : ClusterTestBase
         await grain.Start(new TestDelayExceptionRequest()
         {
             MsDelayPriorToResult = delay
-        });
+        }, _cancellationTokenSource.Token);
 
         var status = await grain.GetWorkStatus();
 
@@ -147,7 +150,7 @@ public class SyncWorkerTests : ClusterTestBase
         await grain.Start(new TestDelayExceptionRequest()
         {
             MsDelayPriorToResult = delay
-        });
+        }, _cancellationTokenSource.Token);
 
         var action = new Func<Task>(async () => await grain.GetException());
 
@@ -232,5 +235,87 @@ public class SyncWorkerTests : ClusterTestBase
         var action = new Func<Task>(() => grain.GetResult());
 
         await action.Should().ThrowAsync<InvalidStateException>();
+    }
+
+    [Fact]
+    public async Task WhenGrainHasCancellationSupport_ShouldRunThroughFullGrainLogicIfNoCancellation()
+    {
+        var request = new SampleCancellationRequest
+        {
+            StartingValue = 1,
+            EnumerationDelay = TimeSpan.FromMilliseconds(10),
+            EnumerationMax = 1_000
+        };
+
+        var grain = Cluster.GrainFactory.GetGrain<ICancellableGrain>(Guid.NewGuid());
+
+        var result = await grain.StartWorkAndPollUntilResult(request);
+
+        result.EndingValue.Should().BeGreaterOrEqualTo(1000);
+    }
+
+    [Fact]
+    public async Task WhenGrainHasCancellationSupport_CanReturnResultAtCancellation()
+    {
+        var request = new SampleCancellationRequest
+        {
+            StartingValue = 1,
+            EnumerationDelay = TimeSpan.FromMilliseconds(10),
+            EnumerationMax = 1_000,
+            ThrowOnCancel = false,
+        };
+
+        var grain = Cluster.GrainFactory.GetGrain<ICancellableGrain>(Guid.NewGuid());
+
+        var cancellationToken = _cancellationTokenSource.Token;
+
+        _ = await grain.Start(request, cancellationToken);
+        await Task.Delay(TimeSpan.FromSeconds(1));
+        await _cancellationTokenSource.Cancel();
+
+        // Since sending the cancellation is not instantaneous, wait until the work status has changed from running
+        var status = await grain.GetWorkStatus();
+        while (status == Enums.SyncWorkStatus.Running)
+        {
+            await Task.Delay(100);
+            status = await grain.GetWorkStatus();
+        }
+
+        var result = await grain.GetResult();
+
+        result!.EndingValue.Should().BeGreaterThan(1);
+        result!.EndingValue.Should().BeLessThan(1_000);
+    }
+
+    [Fact]
+    public async Task WhenGrainHasCancellationSupport_CanThrow()
+    {
+        var request = new SampleCancellationRequest
+        {
+            StartingValue = 1,
+            EnumerationDelay = TimeSpan.FromMilliseconds(10),
+            EnumerationMax = 1_000,
+            ThrowOnCancel = true,
+        };
+
+        var grain = Cluster.GrainFactory.GetGrain<ICancellableGrain>(Guid.NewGuid());
+
+        var cancellationToken = _cancellationTokenSource.Token;
+
+        _ = await grain.Start(request, cancellationToken);
+        await Task.Delay(TimeSpan.FromSeconds(1));
+        await _cancellationTokenSource.Cancel();
+
+        // Since sending the cancellation is not instantaneous, wait until the work status has changed from running
+        var status = await grain.GetWorkStatus();
+        while (status == Enums.SyncWorkStatus.Running)
+        {
+            await Task.Delay(100);
+            status = await grain.GetWorkStatus();
+        }
+
+        var result = await grain.GetException();
+
+        result.Should().BeOfType<OperationCanceledException>();
     }
 }

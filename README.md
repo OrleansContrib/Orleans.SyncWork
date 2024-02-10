@@ -65,7 +65,8 @@ This package introduces a few "requirements" against Orleans:
 Create an interface for the grain, which implements `ISyncWorker<TRequest, TResult>`, as well as one of the `IGrainWith...Key` interfaces. Then create a new class that extends the `SyncWorker<TRequest, TResult>` abstract class, and implements the new interface that was introduced:
 
 ```cs
-public interface IPasswordVerifierGrain : ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>, IGrainWithGuidKey
+public interface IPasswordVerifierGrain
+    : ISyncWorker<PasswordVerifierRequest, PasswordVerifierResult>, IGrainWithGuidKey;
 
 public class PasswordVerifierGrain : SyncWorker<PasswordVerifierRequest, PasswordVerifierResult>, IPasswordVerifierGrain
 {
@@ -79,7 +80,8 @@ public class PasswordVerifierGrain : SyncWorker<PasswordVerifierRequest, Passwor
         _passwordVerifier = passwordVerifier;
     }
 
-    protected override async Task<PasswordVerifierResult> PerformWork(PasswordVerifierRequest request)
+    protected override async Task<PasswordVerifierResult> PerformWork(
+        PasswordVerifierRequest request, GrainCancellationToken grainCancellationToken)
     {
         var verifyResult = await _passwordVerifier.VerifyPassword(request.PasswordHash, request.Password);
 
@@ -89,6 +91,7 @@ public class PasswordVerifierGrain : SyncWorker<PasswordVerifierRequest, Passwor
         };
     }
 }
+
 public class PasswordVerifierRequest
 {
     public string Password { get; set; }
