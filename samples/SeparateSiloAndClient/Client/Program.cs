@@ -28,11 +28,12 @@ var result = await grain.StartWorkAndPollUntilResult(
         PasswordHash = "$2a$11$vBzJ4Ewx28C127AG5x3kT.QCCS8ai0l4JLX3VOX3MzHRkF4/A5twy"
     });
 
-Console.WriteLine($"""
-    IsValid password: { result.IsValid}
+Console.WriteLine(
+$"""
+IsValid password: { result.IsValid }
 
 Press any key to exit...
-    """);
+""");
 
 Console.ReadKey();
 
