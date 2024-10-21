@@ -29,9 +29,9 @@ var result = await grain.StartWorkAndPollUntilResult(
     });
 
 Console.WriteLine($"""
-    IsValid password: {result.IsValid}
+    IsValid password: { result.IsValid}
 
-    Press any key to exit...
+Press any key to exit...
     """);
 
 Console.ReadKey();
