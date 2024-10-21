@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
-using Orleans.SyncWork.Demo.Services.Grains;
+using Microsoft.Extensions.Logging;
 using Orleans.SyncWork;
+using Orleans.SyncWork.Demo.Services.Grains;
 
 Console.WriteLine("Hello, World!");
 

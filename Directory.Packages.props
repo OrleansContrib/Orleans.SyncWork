@@ -28,7 +28,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
     <PackageVersion Include="OrleansDashboard" Version="7.2.2" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.9.0" />
     <PackageVersion Include="System.Text.Json" Version="8.0.5" />
     <PackageVersion Include="xunit" Version="2.4.1" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.3">
