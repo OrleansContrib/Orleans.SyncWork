@@ -15,15 +15,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orleans.SyncWork", "src\Orl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{476ED2F0-1D97-425B-B3B7-3AF0961FE4B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.SyncWork.Tests", "test\Orleans.SyncWork.Tests\Orleans.SyncWork.Tests.csproj", "{45FA9797-D1D9-4DC6-8456-D9B8A9C52102}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orleans.SyncWork.Tests", "test\Orleans.SyncWork.Tests\Orleans.SyncWork.Tests.csproj", "{45FA9797-D1D9-4DC6-8456-D9B8A9C52102}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orleans.SyncWork.Demo.Services", "samples\Orleans.SyncWork.Demo.Services\Orleans.SyncWork.Demo.Services.csproj", "{961EF604-582A-461C-90CE-C7FFE6C40769}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orleans.SyncWork.Demo.Services", "samples\Orleans.SyncWork.Demo.Services\Orleans.SyncWork.Demo.Services.csproj", "{961EF604-582A-461C-90CE-C7FFE6C40769}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{8CC7CA68-C6E7-486A-B972-705CC8A05031}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SeparateSiloAndClient", "SeparateSiloAndClient", "{A6D5590F-689D-4851-9DC4-9C0553233265}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Silo", "samples\SeparateSiloAndClient\Silo\Silo.csproj", "{E4CDE27D-0DEC-4068-B7B0-0F5DBC9D218B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "samples\SeparateSiloAndClient\Client\Client.csproj", "{24E1284B-92C9-4D05-A7A6-C406883BC5FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +57,14 @@ Global
 		{961EF604-582A-461C-90CE-C7FFE6C40769}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{961EF604-582A-461C-90CE-C7FFE6C40769}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{961EF604-582A-461C-90CE-C7FFE6C40769}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4CDE27D-0DEC-4068-B7B0-0F5DBC9D218B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4CDE27D-0DEC-4068-B7B0-0F5DBC9D218B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4CDE27D-0DEC-4068-B7B0-0F5DBC9D218B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4CDE27D-0DEC-4068-B7B0-0F5DBC9D218B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24E1284B-92C9-4D05-A7A6-C406883BC5FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24E1284B-92C9-4D05-A7A6-C406883BC5FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24E1284B-92C9-4D05-A7A6-C406883BC5FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24E1284B-92C9-4D05-A7A6-C406883BC5FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +75,9 @@ Global
 		{D3E6A078-CF31-44BD-AA4E-8DDB956882D5} = {E908BC7F-91AC-4D75-A06A-97E05E765C17}
 		{45FA9797-D1D9-4DC6-8456-D9B8A9C52102} = {476ED2F0-1D97-425B-B3B7-3AF0961FE4B7}
 		{961EF604-582A-461C-90CE-C7FFE6C40769} = {20B3ED9E-B5FB-47A8-B24E-9EED821AEBE3}
+		{A6D5590F-689D-4851-9DC4-9C0553233265} = {20B3ED9E-B5FB-47A8-B24E-9EED821AEBE3}
+		{E4CDE27D-0DEC-4068-B7B0-0F5DBC9D218B} = {A6D5590F-689D-4851-9DC4-9C0553233265}
+		{24E1284B-92C9-4D05-A7A6-C406883BC5FA} = {A6D5590F-689D-4851-9DC4-9C0553233265}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {17BB45B7-AC08-488D-905F-11E706140C72}
