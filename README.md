@@ -13,9 +13,11 @@ The project was built primarily with .net3 in mind, though the varying major ver
 
 ### Requirements
 
-- [.net 6.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
-- [.net 7.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
-- [.net 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- Depending on release:
+  - [.net 6.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+  - [.net 7.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
+  - [.net 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+  - [.net 9.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 - [dotnet-format](https://github.com/dotnet/format)
 
 ## Project Overview
@@ -32,6 +34,8 @@ The projects in this repository include:
 - [Orleans.SyncWork.Demo.Api](#orleanssyncworkdemoapi)
 - [Orleans.SyncWork.Demo.Api.Benchmark](#orleanssyncworkdemoapibenchmark)
 - [Orleans.SyncWork.Demo.Services](#orleanssyncworkdemoservices)
+- [Client](#client)
+- [Silo](#silo)
 
 ### Orleans.SyncWork
 
@@ -126,15 +130,26 @@ One of the tests in particular throws 10k grains onto the cluster at once, all o
 
 TODO: still could use a few more unit tests here to if nothing else, document behavior.
 
-### Orleans.SyncWork.Demo.Api
+### Samples
+
+#### Orleans.SyncWork.Demo.Api
 
 This is a demo of the `ISyncWork<TRequest, TResult>` in action. This project is being used as both a Orleans Silo, and client. Generally you would stand up nodes to the cluster separate from the clients against the cluster. Since we have only one node for testing purposes, this project acts as both the silo host and client.
 
-The [OrleansDashboard](https://github.com/OrleansContrib/OrleansDashboard) is also brought up with the API. You can see an example of hitting an endpoint in which 10k password verification requests are received here:
-
-![Dashboard showing 10k CPU bound, long running requests](/docs/images/dashboard.PNG)
-
 Swagger UI is also made available to the API for testing out the endpoints for demo purposes.
+
+#### Orleans.SyncWork.Demo.Services
+
+This project defines several grains to demonstrate the workings of the `Orleans.SyncWork` package, through the Web API, benchmark, and tests.  This project hosts the silo and consumes from said silo, to see an example of the silo and client
+hosted and interacting separately, see [Client](#client) and [Silo](#silo)
+
+#### Client
+
+A sample standalone client application
+
+#### Silo
+
+A sample standalone silo/server application
 
 ### Orleans.SyncWork.Demo.Api.Benchmark
 
@@ -214,7 +229,3 @@ And here are the results:
 | OrleansTasks          |  2.130 s | 0.0055 s | 0.0084 s |
 
 And of course note, that in the above the Orleans tasks are _limited_ to my local cluster. In a more real situation where you have multiple nodes to the cluster, you could expect to get better timing, though you'd probably have to deal more with network latency.
-
-### Orleans.SyncWork.Demo.Services
-
-This project defines several grains to demonstrate the workings of the `Orleans.SyncWork` package, through the Web API, benchmark, and tests.

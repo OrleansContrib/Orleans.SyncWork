@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Orleans.SyncWork;
+using Orleans.SyncWork.Demo.Services;
 using Orleans.SyncWork.Demo.Services.Grains;
 
 Console.WriteLine("Hello, World!");
@@ -24,8 +25,8 @@ IPasswordVerifierGrain grain = client.GetGrain<IPasswordVerifierGrain>(Guid.NewG
 var result = await grain.StartWorkAndPollUntilResult(
     new PasswordVerifierRequest()
     {
-        Password = "my super neat password that's totally secure because it's super long",
-        PasswordHash = "$2a$11$vBzJ4Ewx28C127AG5x3kT.QCCS8ai0l4JLX3VOX3MzHRkF4/A5twy"
+        Password = PasswordConstants.Password,
+        PasswordHash = PasswordConstants.PasswordHash,
     });
 
 Console.WriteLine(
