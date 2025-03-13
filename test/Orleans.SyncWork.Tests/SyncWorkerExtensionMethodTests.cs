@@ -4,6 +4,7 @@ using BCrypt.Net;
 using FluentAssertions;
 using Orleans.SyncWork.Demo.Services;
 using Orleans.SyncWork.Demo.Services.Grains;
+using Orleans.SyncWork.Exceptions;
 using Orleans.SyncWork.Tests.TestClusters;
 using Xunit;
 
@@ -64,7 +65,8 @@ public class SyncWorkerExtensionMethodTests : ClusterTestBase
 
         Func<Task> action = async () => await grain.StartWorkAndPollUntilResult(request);
 
-        await action.Should().ThrowAsync<SaltParseException>();
+        await action.Should().ThrowAsync<GrainFaultedException>()
+            .WithInnerException<GrainFaultedException, SaltParseException>();
     }
 }
 

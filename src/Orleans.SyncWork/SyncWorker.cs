@@ -7,13 +7,17 @@ using Orleans.SyncWork.Exceptions;
 namespace Orleans.SyncWork;
 
 /// <summary>
-/// This class should be used as the base class for extending for the creation of long running, cpu bound, synchronous work.
-/// 
+/// <para>
+/// This class should be used as the base class for extending for the creation of long-running, cpu bound, synchronous work.
+/// </para>
+/// <para>
 /// It relies on a configured <see cref="LimitedConcurrencyLevelTaskScheduler"/> that limits concurrent work to some level
 /// below the CPU being "fully engaged with work", as to leave enough resources for the Orleans async messaging to get through.
+/// </para>
 /// </summary>
-/// <typeparam name="TRequest">The request type (arguments/parameters) for a long running piece of work.</typeparam>
-/// <typeparam name="TResult">The result/response for a long running piece of work.</typeparam>
+/// <typeparam name="TRequest">The request type (arguments/parameters) for a long-running piece of work.</typeparam>
+/// <typeparam name="TResult">The result/response for a long-running piece of work.</typeparam>
+/// <inheritdoc cref="ISyncWorker{TRequest,TResult}"/>
 public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TRequest, TResult>
 {
     /// <summary>
@@ -30,8 +34,8 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     /// <summary>
     /// Constructs an instance of the <see cref="SyncWorker{TRequest,TResult}"/>.
     /// </summary>
-    /// <param name="logger">The logger for the instance</param>
-    /// <param name="limitedConcurrencyScheduler">The task scheduler that will be used for the long running work.</param>
+    /// <param name="logger">The logger for the instance.</param>
+    /// <param name="limitedConcurrencyScheduler">The task scheduler that will be used for the long-running work.</param>
     protected SyncWorker(ILogger logger, LimitedConcurrencyLevelTaskScheduler limitedConcurrencyScheduler)
     {
         Logger = logger;
@@ -68,7 +72,7 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     /// <inheritdoc />
     public Task<Exception?> GetException()
     {
-        if (_status != SyncWorkStatus.Faulted)
+        if (_status != SyncWorkStatus.Faulted && _status != SyncWorkStatus.Cancelled)
         {
             Logger.LogError("{Method}: Attempting to retrieve exception from grain when grain not in a faulted state ({_status}).", nameof(GetException), _status);
             DeactivateOnIdle();
@@ -98,7 +102,7 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     }
 
     /// <summary>
-    /// The method that actually performs the long running work.
+    /// The method that actually performs the long-running work.
     /// </summary>
     /// <param name="request">The request/parameters used for the execution of the method.</param>
     /// <param name="grainCancellationToken">The cancellation token.</param>
@@ -106,9 +110,9 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
     protected abstract Task<TResult> PerformWork(TRequest request, GrainCancellationToken grainCancellationToken);
 
     /// <summary>
-    /// The task creation that fires off the long running work to the <see cref="LimitedConcurrencyLevelTaskScheduler"/>.
+    /// The task creation that fires off the long-running work to the <see cref="LimitedConcurrencyLevelTaskScheduler"/>.
     /// </summary>
-    /// <param name="request">The request to use for the invoke of the long running work.</param>
+    /// <param name="request">The request to use for the invocation of the long-running work.</param>
     /// <param name="grainCancellationToken">The cancellation token.</param>
     /// <returns>a <see cref="Task"/> representing the fact that the work has been dispatched.</returns>
     private Task CreateTask(TRequest request, GrainCancellationToken grainCancellationToken)
@@ -119,15 +123,22 @@ public abstract class SyncWorker<TRequest, TResult> : Grain, ISyncWorker<TReques
             {
                 Logger.LogInformation("{Method}: Beginning work for task.", nameof(CreateTask));
                 _result = await PerformWork(request, grainCancellationToken);
-                _exception = default;
+                _exception = null;
                 _status = SyncWorkStatus.Completed;
                 Logger.LogInformation("{Method}: Completed work for task.", nameof(CreateTask));
+            }
+            catch (OperationCanceledException e)
+            {
+                Logger.LogInformation("Grain work canceled.");
+                _result = default;
+                _exception = e;
+                _status = SyncWorkStatus.Cancelled;
             }
             catch (Exception e)
             {
                 Logger.LogError(e, "{Method)}: Exception during task.", nameof(CreateTask));
                 _result = default;
-                _exception = e;
+                _exception = new GrainFaultedException(e);
                 _status = SyncWorkStatus.Faulted;
             }
         }, grainCancellationToken.CancellationToken, TaskCreationOptions.LongRunning, _limitedConcurrencyScheduler);

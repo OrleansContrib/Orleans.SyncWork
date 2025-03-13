@@ -100,6 +100,9 @@ public static class SyncWorkerExtensions
         {
             var status = await worker.GetWorkStatus();
 
+            if (grainCancellationToken.CancellationToken.IsCancellationRequested)
+                status = SyncWorkStatus.Cancelled;
+            
             switch (status)
             {
                 case SyncWorkStatus.Running:
@@ -108,6 +111,7 @@ public static class SyncWorkerExtensions
                 case SyncWorkStatus.Completed:
                     return (await worker.GetResult())!;
                 case SyncWorkStatus.Faulted:
+                case SyncWorkStatus.Cancelled:
                     var exception = await worker.GetException();
                     throw exception!;
                 case SyncWorkStatus.NotStarted:

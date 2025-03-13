@@ -2,34 +2,33 @@
   <ItemGroup>
     <PackageVersion Include="BCrypt.Net-Next" Version="4.0.2" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.13.1" />
-    <PackageVersion Include="coverlet.collector" Version="3.1.0">
+    <PackageVersion Include="coverlet.collector" Version="6.0.4">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
-    <PackageVersion Include="coverlet.msbuild" Version="3.1.0">
+    <PackageVersion Include="coverlet.msbuild" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="FluentAssertions" Version="6.2.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="4.5.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="9.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
-    <PackageVersion Include="Microsoft.Orleans.Client" Version="8.2.0" />
-    <PackageVersion Include="Microsoft.Orleans.Server" Version="8.2.0" />
-    <PackageVersion Include="Microsoft.Orleans.Sdk" Version="8.2.0" />
-    <PackageVersion Include="Microsoft.Orleans.TestingHost" Version="8.2.0" />
+    <PackageVersion Include="Microsoft.Orleans.Client" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Orleans.Server" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Orleans.Sdk" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Orleans.TestingHost" Version="9.0.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageVersion Include="Nerdbank.GitVersioning">
       <Version>3.4.244</Version>
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
-    <PackageVersion Include="OrleansDashboard" Version="7.2.2" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.9.0" />
-    <PackageVersion Include="System.Text.Json" Version="8.0.5" />
+    <PackageVersion Include="System.Text.Json" Version="9.0.3" />
     <PackageVersion Include="xunit" Version="2.4.1" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
