@@ -102,7 +102,7 @@ public static class SyncWorkerExtensions
 
             if (grainCancellationToken.CancellationToken.IsCancellationRequested)
                 status = SyncWorkStatus.Cancelled;
-            
+
             switch (status)
             {
                 case SyncWorkStatus.Running:
