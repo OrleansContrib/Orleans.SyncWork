@@ -7,7 +7,6 @@
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" />
     <PackageReference Include="Microsoft.Orleans.Server" />
-    <PackageReference Include="OrleansDashboard" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
 

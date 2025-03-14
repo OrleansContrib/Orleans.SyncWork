@@ -34,10 +34,6 @@ namespace Orleans.SyncWork.Demo.Api
                     .ConfigureServices(collection =>
                     {
                         collection.AddSingleton<IPasswordVerifier, PasswordVerifier>();
-                    })
-                    .UseDashboard(config =>
-                    {
-                        config.Port = 8081;
                     });
             });
 

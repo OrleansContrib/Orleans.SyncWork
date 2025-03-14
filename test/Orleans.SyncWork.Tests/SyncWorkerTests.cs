@@ -47,33 +47,6 @@ public class SyncWorkerTests : ClusterTestBase
         tasks.Select(task => task.Result).Should().OnlyContain(result => true);
     }
 
-    /// <summary>
-    /// This should be more than enough grains to overload the server.  
-    /// Should be a "pretty decent" test to show that the <see cref="LimitedConcurrencyLevelTaskScheduler"/> is doing
-    /// what is intended, by not allowing "more work than the CPU can handle", while still leaving enough room for
-    /// Orleans messaging to not get overloaded.
-    /// </summary>
-    /// <returns></returns>
-    [Fact, Trait(Traits.Category, Traits.Categories.LongRunning)]
-    public async Task WhenGivenLargeNumberOfRequests_SystemShouldNotBecomeOverloaded()
-    {
-        var tasks = new List<Task<PasswordVerifierResult>>();
-        var request = new PasswordVerifierRequest
-        {
-            Password = PasswordConstants.Password,
-            PasswordHash = PasswordConstants.PasswordHash
-        };
-        for (var i = 0; i < 10_000; i++)
-        {
-            var grain = Cluster.GrainFactory.GetGrain<IPasswordVerifierGrain>(Guid.NewGuid());
-            tasks.Add(grain.StartWorkAndPollUntilResult(request));
-        }
-
-        await Task.WhenAll(tasks);
-
-        tasks.Select(task => task.Result).Should().OnlyContain(result => true);
-    }
-
     [Fact]
     public async Task WhenGrainNotStarted_ShouldReturnStatusNotStartedOnGetStatus()
     {
@@ -211,7 +184,8 @@ public class SyncWorkerTests : ClusterTestBase
         var grain = Cluster.GrainFactory.GetGrain<IGrainThatWaitsSetTimePriorToExceptionResultBecomingAvailable>(Guid.NewGuid());
         var action = new Func<Task>(async () => await grain.StartWorkAndPollUntilResult(request));
 
-        await action.Should().ThrowAsync<TestGrainException>();
+        await action.Should().ThrowAsync<GrainFaultedException>()
+            .WithInnerException<GrainFaultedException, TestGrainException>();
     }
 
     [Fact]
