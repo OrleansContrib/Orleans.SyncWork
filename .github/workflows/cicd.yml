@@ -83,7 +83,7 @@ jobs:
          dotnet-version: 8.0.x
     
     - name: Pack
-      run: dotnet pack src/Orleans.SyncWork/Orleans.SyncWork.csproj -f net8.0 -c Release --no-restore --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
+      run: dotnet pack src/Orleans.SyncWork/Orleans.SyncWork.csproj -c Release --include-symbols -p:SymbolPackageFormat=snupkg -o .
 
     - name: Push to NuGet
       run: dotnet nuget push *.nupkg --skip-duplicate -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_KEY}}
