@@ -9,7 +9,7 @@ on:
 jobs:
 
   check-code-formatting:
-  
+
     runs-on: ubuntu-latest
     name: Check code formating against editorconfig 🔎
 
@@ -80,8 +80,11 @@ jobs:
           8.0.x
           9.0.x
     
+    - name: Build
+      run: dotnet build src/Orleans.SyncWork/Orleans.SyncWork.csproj -c Release
+
     - name: Pack
-      run: dotnet pack src/Orleans.SyncWork/Orleans.SyncWork.csproj -c Release --include-symbols -p:SymbolPackageFormat=snupkg -o .
+      run: dotnet pack src/Orleans.SyncWork/Orleans.SyncWork.csproj -c Release --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
 
     - name: Push to NuGet
       run: dotnet nuget push *.nupkg --skip-duplicate -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_KEY}}
