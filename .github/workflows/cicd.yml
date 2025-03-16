@@ -9,6 +9,7 @@ on:
 jobs:
 
   check-code-formatting:
+  
     runs-on: ubuntu-latest
     name: Check code formating against editorconfig 🔎
 
@@ -60,13 +61,8 @@ jobs:
     - name: Test
       run: dotnet test -f ${{ matrix.target-framework }} -c Release --no-restore --no-build --verbosity normal --filter "Category!=LongRunning"
 
-    - name: Pack
-      run: dotnet pack src/Orleans.SyncWork/Orleans.SyncWork.csproj -c Release --no-restore --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
-
-    - name: Push to NuGet
-      run: dotnet nuget push *.nupkg --skip-duplicate -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_KEY}}
-
   deploy:
+
     needs: build-test
     runs-on: ubuntu-latest
     name: Deploy to nuget 🚀
@@ -80,7 +76,9 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-         dotnet-version: 8.0.x
+        dotnet-version: |
+          8.0.x
+          9.0.x
     
     - name: Pack
       run: dotnet pack src/Orleans.SyncWork/Orleans.SyncWork.csproj -c Release --include-symbols -p:SymbolPackageFormat=snupkg -o .

@@ -10,6 +10,7 @@ on:
 jobs:
 
   check-code-formatting:
+  
     runs-on: ubuntu-latest
     name: Check code formating against editorconfig 🔎
 
