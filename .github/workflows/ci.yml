@@ -11,7 +11,7 @@ jobs:
 
   check-code-formatting:
     runs-on: ubuntu-latest
-    name: Check code formating against editorconfig
+    name: Check code formating against editorconfig 🔎
 
     steps:
     - name: Checkout code
@@ -32,8 +32,12 @@ jobs:
 
   build-and-test:
 
+    needs: check-code-formatting
     runs-on: ubuntu-latest
-    name: dotnet build and test
+     strategy:
+      matrix:
+        target-framework: [ 'net8.0', 'net9.0' ]
+    name: dotnet build and test targeting ${{ matrix.target-framework }} 🧪
 
     steps:
     - name: Checkout code
@@ -44,7 +48,9 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: |
+          8.0.x
+          9.0.x
     
     - name: Restore dependencies
       run: dotnet restore
@@ -53,4 +59,4 @@ jobs:
       run: dotnet build -c Release --no-restore
     
     - name: Test
-      run: dotnet test test/Orleans.SyncWork.Tests/Orleans.SyncWork.Tests.csproj -c Release --no-build --verbosity normal --filter "Category!=LongRunning"
+      run: dotnet test test/Orleans.SyncWork.Tests/Orleans.SyncWork.Tests.csproj -f ${{ matrix.target-framework }} -c Release --no-build --verbosity normal --filter "Category!=LongRunning"

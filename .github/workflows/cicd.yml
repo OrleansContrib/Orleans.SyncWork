@@ -10,7 +10,7 @@ jobs:
 
   check-code-formatting:
     runs-on: ubuntu-latest
-    name: Check code formating against editorconfig
+    name: Check code formating against editorconfig 🔎
 
     steps:
     - name: Checkout code
@@ -29,10 +29,14 @@ jobs:
     - name: Check Code Format
       run: dotnet-format --check
 
-  build-test-and-deploy:
+  build-test:
 
     needs: check-code-formatting
     runs-on: ubuntu-latest
+     strategy:
+      matrix:
+        target-framework: [ 'net8.0', 'net9.0' ]
+    name: dotnet build and test targeting ${{ matrix.target-framework }} 🧪
 
     steps:
     - name: Checkout code
@@ -43,7 +47,9 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 9.0.x
+         dotnet-version: |
+          8.0.x
+          9.0.x
     
     - name: Restore dependencies
       run: dotnet restore
@@ -52,10 +58,32 @@ jobs:
       run: dotnet build -c Release --no-restore
     
     - name: Test
-      run: dotnet test -c Release --no-restore --no-build --verbosity normal --filter "Category!=LongRunning"
+      run: dotnet test -f ${{ matrix.target-framework }} -c Release --no-restore --no-build --verbosity normal --filter "Category!=LongRunning"
 
     - name: Pack
       run: dotnet pack src/Orleans.SyncWork/Orleans.SyncWork.csproj -c Release --no-restore --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
+
+    - name: Push to NuGet
+      run: dotnet nuget push *.nupkg --skip-duplicate -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_KEY}}
+
+  deploy:
+    needs: build-test
+    runs-on: ubuntu-latest
+    name: Deploy to nuget 🚀
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+         dotnet-version: 8.0.x
+    
+    - name: Pack
+      run: dotnet pack src/Orleans.SyncWork/Orleans.SyncWork.csproj -f net8.0 -c Release --no-restore --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
 
     - name: Push to NuGet
       run: dotnet nuget push *.nupkg --skip-duplicate -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_KEY}}
