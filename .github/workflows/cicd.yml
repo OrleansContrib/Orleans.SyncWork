@@ -33,7 +33,7 @@ jobs:
 
     needs: check-code-formatting
     runs-on: ubuntu-latest
-     strategy:
+    strategy:
       matrix:
         target-framework: [ 'net8.0', 'net9.0' ]
     name: dotnet build and test targeting ${{ matrix.target-framework }} 🧪
