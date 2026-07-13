@@ -32,7 +32,6 @@ The projects in this repository include:
 - [Orleans.SyncWork](#orleanssyncwork)
 - [Orleans.SyncWork.Tests](#orleanssyncworktests)
 - [Orleans.SyncWork.Demo.Api](#orleanssyncworkdemoapi)
-- [Orleans.SyncWork.Demo.Api.Benchmark](#orleanssyncworkdemoapibenchmark)
 - [Orleans.SyncWork.Demo.Services](#orleanssyncworkdemoservices)
 - [Client](#client)
 - [Silo](#silo)
@@ -54,7 +53,6 @@ This package introduces a few "requirements" against Orleans:
 - In order to not overload Orleans, a `LimitedConcurrencyLevelTaskScheduler` is introduced. This task scheduler is registered (either manually or through the provided extension method) with a maximum level of concurrency for the silo being set up. This maximum concurrency **_MUST_** allow for idle threads, lest the Orleans server be overloaded. In testing, the general rule of thumb was `Environment.ProcessorCount - 2` max concurrency. The important part is that the CPU is not fully "tapped out" such that the normal Orleans asynchronous messaging can't make it through due to the blocking sync work - this will make things start timing out.
 - Blocking grains are stateful, and are currently keyed on a Guid. If in a situation where multiple grains of long running work is needed, each grain should be initialized with its own unique identity.
 - Blocking grains _likely_ **_CAN NOT_** dispatch further blocking grains. This is not yet tested under the repository, but it stands to reason that with a limited concurrency scheduler, the following scenario would lead to a deadlock:
-
   - Grain A is long running
   - Grain B is long running
   - Grain A initializes and fires off Grain B
@@ -140,7 +138,7 @@ Swagger UI is also made available to the API for testing out the endpoints for d
 
 #### Orleans.SyncWork.Demo.Services
 
-This project defines several grains to demonstrate the workings of the `Orleans.SyncWork` package, through the Web API, benchmark, and tests.  This project hosts the silo and consumes from said silo, to see an example of the silo and client
+This project defines several grains to demonstrate the workings of the `Orleans.SyncWork` package, through the Web API and tests. This project hosts the silo and consumes from said silo, to see an example of the silo and client
 hosted and interacting separately, see [Client](#client) and [Silo](#silo)
 
 #### Client
@@ -150,82 +148,3 @@ A sample standalone client application
 #### Silo
 
 A sample standalone silo/server application
-
-### Orleans.SyncWork.Demo.Api.Benchmark
-
-Utilizing [Benchmark DotNet](https://benchmarkdotnet.org/index.html), a benchmarking class was created to both test that the cluster wasn't falling over, and see what sort of timing situation we're dealing with.
-
-Following is the benchmark used at the time of writing:
-
-```cs
-public class Benchy
-{
-    const int TotalNumberPerBenchmark = 100;
-    private readonly IPasswordVerifier _passwordVerifier = new Services.PasswordVerifier();
-    private readonly PasswordVerifierRequest _request = new PasswordVerifierRequest()
-    {
-        Password = PasswordConstants.Password,
-        PasswordHash = PasswordConstants.PasswordHash
-    };
-
-    [Benchmark]
-    public void Serial()
-    {
-        for (var i = 0; i < TotalNumberPerBenchmark; i++)
-        {
-            _passwordVerifier.VerifyPassword(PasswordConstants.PasswordHash, PasswordConstants.Password);
-        }
-    }
-
-    [Benchmark]
-    public async Task MultipleTasks()
-    {
-        var tasks = new List<Task>();
-        for (var i = 0; i < TotalNumberPerBenchmark; i++)
-        {
-            tasks.Add(_passwordVerifier.VerifyPassword(PasswordConstants.PasswordHash, PasswordConstants.Password));
-        }
-
-        await Task.WhenAll(tasks);
-    }
-
-    [Benchmark]
-    public async Task MultipleParallelTasks()
-    {
-        var tasks = new List<Task>();
-
-        Parallel.For(0, TotalNumberPerBenchmark, i =>
-        {
-            tasks.Add(_passwordVerifier.VerifyPassword(PasswordConstants.PasswordHash, PasswordConstants.Password));
-        });
-
-        await Task.WhenAll(tasks);
-    }
-
-    [Benchmark]
-    public async Task OrleansTasks()
-    {
-        var siloHost = await BenchmarkingSIloHost.GetSiloHost();
-        var grainFactory = siloHost.Services.GetRequiredService<IGrainFactory>();
-        var tasks = new List<Task>();
-        for (var i = 0; i < TotalNumberPerBenchmark; i++)
-        {
-            var grain = grainFactory.GetGrain<IPasswordVerifierGrain>(Guid.NewGuid());
-            tasks.Add(grain.StartWorkAndPollUntilResult(_request));
-        }
-
-        await Task.WhenAll(tasks);
-    }
-}
-```
-
-And here are the results:
-
-| Method                |     Mean |    Error |   StdDev |
-| --------------------- | -------: | -------: | -------: |
-| Serial                | 12.399 s | 0.0087 s | 0.0077 s |
-| MultipleTasks         | 12.289 s | 0.0106 s | 0.0094 s |
-| MultipleParallelTasks |  1.749 s | 0.0347 s | 0.0413 s |
-| OrleansTasks          |  2.130 s | 0.0055 s | 0.0084 s |
-
-And of course note, that in the above the Orleans tasks are _limited_ to my local cluster. In a more real situation where you have multiple nodes to the cluster, you could expect to get better timing, though you'd probably have to deal more with network latency.

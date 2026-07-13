@@ -2,62 +2,60 @@ name: Build and test
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
-
   check-code-formatting:
-  
     runs-on: ubuntu-latest
     name: Check code formating against editorconfig 🔎
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 1
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 9.0.x
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 10.0.x
 
-    - name: Install dotnet-format tool
-      run: dotnet tool install -g dotnet-format
-    
-    - name: Check Code Format
-      run: dotnet-format --check
+      - name: Install dotnet-format tool
+        run: dotnet tool install -g dotnet-format
+
+      - name: Check Code Format
+        run: dotnet-format --check
 
   build-and-test:
-
     needs: check-code-formatting
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target-framework: [ 'net8.0', 'net9.0' ]
+        target-framework: ["net8.0", "net9.0", "net10.0"]
     name: dotnet build and test targeting ${{ matrix.target-framework }} 🧪
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: |
-          8.0.x
-          9.0.x
-    
-    - name: Restore dependencies
-      run: dotnet restore
-    
-    - name: Build
-      run: dotnet build -c Release --no-restore
-    
-    - name: Test
-      run: dotnet test test/Orleans.SyncWork.Tests/Orleans.SyncWork.Tests.csproj -f ${{ matrix.target-framework }} -c Release --no-build --verbosity normal --filter "Category!=LongRunning"
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build -c Release --no-restore
+
+      - name: Test
+        run: dotnet test test/Orleans.SyncWork.Tests/Orleans.SyncWork.Tests.csproj -f ${{ matrix.target-framework }} -c Release --no-build --verbosity normal --filter "Category!=LongRunning"

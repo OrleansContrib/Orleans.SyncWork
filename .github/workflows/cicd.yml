@@ -3,88 +3,86 @@ name: Build, test, and deploy
 on:
   push:
     branches:
-      - 'RELEASE/v**'
+      - "RELEASE/v**"
   workflow_dispatch:
 
 jobs:
-
   check-code-formatting:
-
     runs-on: ubuntu-latest
     name: Check code formating against editorconfig 🔎
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 1
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 9.0.x
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 10.0.x
 
-    - name: Install dotnet-format tool
-      run: dotnet tool install -g dotnet-format
-    
-    - name: Check Code Format
-      run: dotnet-format --check
+      - name: Install dotnet-format tool
+        run: dotnet tool install -g dotnet-format
+
+      - name: Check Code Format
+        run: dotnet-format --check
 
   build-test:
-
     needs: check-code-formatting
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target-framework: [ 'net8.0', 'net9.0' ]
+        target-framework: ["net8.0", "net9.0", "net10.0"]
     name: dotnet build and test targeting ${{ matrix.target-framework }} 🧪
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-         dotnet-version: |
-          8.0.x
-          9.0.x
-    
-    - name: Restore dependencies
-      run: dotnet restore
-    
-    - name: Build
-      run: dotnet build -c Release --no-restore
-    
-    - name: Test
-      run: dotnet test -f ${{ matrix.target-framework }} -c Release --no-restore --no-build --verbosity normal --filter "Category!=LongRunning"
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build -c Release --no-restore
+
+      - name: Test
+        run: dotnet test -f ${{ matrix.target-framework }} -c Release --no-restore --no-build --verbosity normal --filter "Category!=LongRunning"
 
   deploy:
-
     needs: build-test
     runs-on: ubuntu-latest
     name: Deploy to nuget 🚀
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: |
-          8.0.x
-          9.0.x
-    
-    - name: Build
-      run: dotnet build src/Orleans.SyncWork/Orleans.SyncWork.csproj -c Release
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
 
-    - name: Pack
-      run: dotnet pack src/Orleans.SyncWork/Orleans.SyncWork.csproj -c Release --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
+      - name: Build
+        run: dotnet build src/Orleans.SyncWork/Orleans.SyncWork.csproj -c Release
 
-    - name: Push to NuGet
-      run: dotnet nuget push *.nupkg --skip-duplicate -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_KEY}}
+      - name: Pack
+        run: dotnet pack src/Orleans.SyncWork/Orleans.SyncWork.csproj -c Release --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
+
+      - name: Push to NuGet
+        run: dotnet nuget push *.nupkg --skip-duplicate -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_KEY}}
