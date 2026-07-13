@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" />
     <PackageReference Include="Microsoft.Orleans.Server" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
