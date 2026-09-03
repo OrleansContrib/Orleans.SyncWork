@@ -33,7 +33,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="Microsoft.Orleans.Server" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" />
   </ItemGroup>
 
   <ItemGroup>
